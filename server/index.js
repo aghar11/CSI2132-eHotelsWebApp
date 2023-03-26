@@ -7,6 +7,7 @@ const pool = require("./db");
 app.use(cors());
 app.use(express.json());
 
+<<<<<<< Updated upstream
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
@@ -97,3 +98,8 @@ app.delete("/Hotel/:id", async(req, res)=>{
 });
 
 
+=======
+app.listen(5000, () => {
+    console.log("Server started on port 5000.")
+});
+>>>>>>> Stashed changes
