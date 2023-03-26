@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS eHOTELSDB;
+
 CREATE TABLE IF NOT EXISTS Headquarters(
 	CompanyName Varchar(20) PRIMARY KEY,
 	NumberOfHotels Integer,
