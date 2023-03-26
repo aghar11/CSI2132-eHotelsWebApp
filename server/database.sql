@@ -1,5 +1,4 @@
-CREATE DATABASE IF NOT EXISTS eHotelsDB;
-
+-- SQL Script to create tables in the database according to Deliverable 1 schema
 CREATE TABLE IF NOT EXISTS Headquarters(
 	CompanyName Varchar(20) PRIMARY KEY,
 	NumberOfHotels Integer,
