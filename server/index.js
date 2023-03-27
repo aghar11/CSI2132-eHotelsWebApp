@@ -7,8 +7,7 @@ const pool = require("./db");
 app.use(cors());
 app.use(express.json());
 
-const bodyParser = require("body-parser");
-app.use(bodyParser.json());
+
 
 app.listen(5000, () => {
     console.log("Server started on port 5000.")
@@ -19,10 +18,16 @@ app.listen(5000, () => {
 app.post("/Hotel", async(req, res)=> {
 
     try {
-        const {hotelId, CompanyName, Address, Category, NumberOfRooms} = req.body;
+        const hotel = req.body;
+        console.log(hotel.hotelId);
+        console.log(hotel.companyname);
+        console.log(hotel.address);
+        console.log(hotel.category);
+        console.log(hotel.numberofrooms);
+
         const newHotel = await pool.query(
-            "INSERT INTO Hotel (HotelID, CompanyName, Address, Category, NumberOfRooms) VALUES ($1, $2, $3, $4, $5) RETURNING *", [hotelId, 
-            CompanyName, Address, Category, NumberOfRooms]
+            "INSERT INTO Hotel (HotelID, CompanyName, Address, Category, NumberOfRooms) VALUES ($1, $2, $3, $4, $5) RETURNING *", [hotel.hotelId, 
+                hotel.companyname, hotel.address, hotel.category, hotel.numberofrooms]
         );
 
         res.json(newHotel.rows);
