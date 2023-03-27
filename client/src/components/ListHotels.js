@@ -7,7 +7,7 @@ const ListHotels = () => {
 
     const deleteHotel = async (id) => {
         try {
-            const deleteHotel = await fetch(`http://localhost:5000/hotel/${id}`, {
+            const deleteHotel = await fetch(`http://localhost:5000/api/hotel/${id}`, {
                 method: "DELETE"
             });
             setHotels(hotels.filter(hotel => hotel.hotelid !== id));
@@ -18,7 +18,7 @@ const ListHotels = () => {
 
     const getHotels = async () => {
         try {
-            const response = await fetch("http://localhost:5000/hotel");
+            const response = await fetch("http://localhost:5000/api/hotel");
             const jsonData = await response.json();
             setHotels(jsonData);
         } catch (error) {
