@@ -7,7 +7,6 @@ const pool = require("./db");
 app.use(cors());
 app.use(express.json());
 
-<<<<<<< Updated upstream
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
@@ -20,10 +19,10 @@ app.listen(5000, () => {
 app.post("/Hotel", async(req, res)=> {
 
     try {
-        const hotel = req.body;
+        const {hotelId, CompanyName, Address, Category, NumberOfRooms} = req.body;
         const newHotel = await pool.query(
-            "INSERT INTO Hotel (HotelID, CompanyName, Address, Category, NumberOfRooms) VALUES ($1, $2, $3, $4, $5) RETURNING *", [hotel.HotelID, 
-            hotel.CompanyName, hotel.Address, hotel.Category, hotel.NumberOfRooms]
+            "INSERT INTO Hotel (HotelID, CompanyName, Address, Category, NumberOfRooms) VALUES ($1, $2, $3, $4, $5) RETURNING *", [hotelId, 
+            CompanyName, Address, Category, NumberOfRooms]
         );
 
         res.json(newHotel.rows);
@@ -65,7 +64,7 @@ app.get("/Hotel/:id", async(req, res)=>{
 });
 
 
-//Update
+//Update hotel category
 
 app.put("/Hotel/:id", async(req, res)=>{
 
@@ -73,6 +72,22 @@ app.put("/Hotel/:id", async(req, res)=>{
         const {id} = req.params;
         const {category} = req.body;
         const updateHotel = await pool.query("UPDATE Hotel SET category = $1 WHERE HotelID = $2", [category, id]);
+        res.json("Hotel was updated!");
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+
+//Update hotel id
+
+app.put("/Hotel/:id", async(req, res)=>{
+
+    try {
+        const {id} = req.params;
+        const {hotelid} = req.body;
+        const updateHotel = await pool.query("UPDATE Hotel SET hotelid = $1 WHERE HotelID = $2", [hotelid, id]);
         res.json("Hotel was updated!");
 
     } catch (err) {
@@ -98,8 +113,3 @@ app.delete("/Hotel/:id", async(req, res)=>{
 });
 
 
-=======
-app.listen(5000, () => {
-    console.log("Server started on port 5000.")
-});
->>>>>>> Stashed changes
