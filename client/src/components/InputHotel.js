@@ -11,14 +11,13 @@ const InputHotel = ()=> {
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            const body = {hotelId, category};
-            const response = fetch("http://localhost:5000/hotel", {
+            const body = {hotelId, companyname, address, numberofrooms, category};
+            const response = await fetch("http://localhost:5000/hotel", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
-
-            console.log(response);
+            window.location = "/";
         } catch (error) {
             console.error(error.message);
         }

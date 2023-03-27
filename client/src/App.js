@@ -1,17 +1,20 @@
 
 import './App.css';
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 
 
 //components
 
 import InputHotel from './components/InputHotel';
+import ListHotels from "./components/ListHotels";
+
 
 function App() {
   return (
     <Fragment>
       <div className = "container">
         <InputHotel />
+        <ListHotels />
       </div> 
       
     </Fragment>
