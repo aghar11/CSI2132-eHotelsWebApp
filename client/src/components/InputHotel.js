@@ -11,7 +11,7 @@ const InputHotel = ()=> {
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            const body = {hotelId, companyname, address, numberofrooms, category};
+            const body = {hotelId, companyname, address, category, numberofrooms};
             const response = await fetch("http://localhost:5000/hotel", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
