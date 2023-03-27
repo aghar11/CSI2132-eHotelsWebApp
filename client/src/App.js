@@ -4,9 +4,8 @@ import React, { Fragment } from 'react';
 
 
 //components
-
-import InputHotel from './components/InputHotel';
-import ListHotels from "./components/ListHotels";
+import InputHotel from './components/hotelComponents/InputHotel';
+import ListHotels from "./components/hotelComponents/ListHotels";
 
 
 function App() {
