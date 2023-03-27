@@ -9,7 +9,7 @@ const EditHotel = ({hotel}) => {
         e.preventDefault();
         try {
             const body = (hotelid);
-            const response = await fetch(`http://localhost:5000/hotel/${hotel.hotelid}`, {
+            const response = await fetch(`http://localhost:5000/api/hotel/${hotel.hotelid}`, {
                 method: "PUT",
                 header: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
