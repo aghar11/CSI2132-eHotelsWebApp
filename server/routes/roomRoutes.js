@@ -59,6 +59,8 @@ router.get("/room/:roomNumber", async(req, res)=>{
     }
     
 });
+
+
 router.put("/room/price/:roomNumber", async(req, res)=>{
 
     try {
