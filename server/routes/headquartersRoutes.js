@@ -1,7 +1,7 @@
 /**
  * Handle API requests related to the Headquarters table.
  *
- * @author 
+ * @author Akarsh Gharge.
  * @since  March, 2023
  */
 
@@ -244,17 +244,19 @@ router.get("/headquarters/:companyName/phone", async(req, res) => {
 /**
  * Create headquarter email instance.
  * 
- * Endpoint: /api/headquarter/:companyName/email
+ * Endpoint: /api/headquarters/:companyName/email
  * Request Type: POST
  * Request Body:
  *  {
  *      "email": "test@gmail.com"
  *  }
  */
-router.post("/headquarter/:companyName/email", async(req, res) => {
+router.post("/headquarters/:companyName/email", async(req, res) => {
     try {
-        const companyName = req.params;
-        const email = req.body.phoneNumber;
+        const companyName = req.params.companyName;
+        const email = req.body.email;
+
+        console.debug("Creating Headquarter email instance( "+companyName+", "+email+").");
 
         const newEmail = await pool.query("INSERT INTO HeadquartersEmail (CompanyName, email) VALUES ($1, $2) RETURNING *", [companyName, email]);
 
@@ -267,21 +269,23 @@ router.post("/headquarter/:companyName/email", async(req, res) => {
 /**
  * Delete headquarter email instance.
  * 
- * Endpoint: /api/headquarter/:companyName/email
+ * Endpoint: /api/headquarters/:companyName/email
  * Request Type: DELETE
  * Request Body:
  *  {
  *      "email": "test@gmail.com"
  *  }
  */
-router.delete("/headquarter/:companyName/email", async(req, res) => {
+router.delete("/headquarters/:companyName/email", async(req, res) => {
     try {
-        const companyName = req.params;
-        const email = req.body.phoneNumber;
+        const companyName = req.params.companyName;
+        const email = req.body.email;
 
-        const deleteEmail = await pool.query("DELETE FROM HeadquartersEmail WHERE (CompanyName = $1 AND email = $2", [companyName, email]);
+        console.debug("Deleting Headquarter email instance( "+companyName+", "+email+").");
 
-        res.json("Phone number was deleted!");
+        const deleteEmail = await pool.query("DELETE FROM HeadquartersEmail WHERE (CompanyName = $1 AND email = $2)", [companyName, email]);
+
+        res.json("Email was deleted!");
     } catch (err) {
         console.error(err.message);
     }
@@ -290,18 +294,20 @@ router.delete("/headquarter/:companyName/email", async(req, res) => {
 /**
  * Find all emails for a certain headquarter.
  * 
- * Endpoint: /api/headquarter/:companyName/email
+ * Endpoint: /api/headquarters/:companyName/email
  * Request Type: GET
  * Request Body:
  *  { }
  */
-router.get("/headquarter/:companyName/email", async(req, res) => {
+router.get("/headquarters/:companyName/email", async(req, res) => {
     try {
-        const companyName = req.params;
+        const companyName = req.params.companyName;
 
-        const phoneNumbers = await pool.query("SELECT * FROM HeadquartersEmail WHERE CompanyName = $1", [companyName]);
+        console.debug("Retrieving all emails for Headquarter with company name : "+companyName+".");
 
-        res.json(phoneNumbers.rows);
+        const emails = await pool.query("SELECT * FROM HeadquartersEmail WHERE CompanyName = $1", [companyName]);
+
+        res.json(emails.rows);
     } catch (error) {
         console.error(err.message);
     }
