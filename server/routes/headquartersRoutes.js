@@ -306,7 +306,7 @@ router.delete("/headquarters/email", async(req, res) => {
 /**
  * Find all emails for a certain headquarter.
  * 
- * Endpoint: /api/headquarters/:companyName/email
+ * Endpoint: /api/headquarters/email
  * Request Type: GET
  * Request Body:
  *  {
