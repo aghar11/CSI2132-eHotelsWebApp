@@ -48,19 +48,6 @@ router.get("/customer", async(req, res)=>{
     
 });
 
-        console.debug("Adding Customer: "+JSON.stringify(customer)+" to database.")
-
-        const newCustomer =  await pool.query(
-            "INSERT INTO Customer (CustomerID, SIN, RegistrationDate, FirstName, LastName, StreetNumber, StreetName, AptNumber, City, State, PostalCode) VALUES \
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
-            [customer.customerID, customer.SIN , customer.registrationDate, name.firstName, name.lastName, address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
-        );
-
-        res.json(newCustomer.rows);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
 
 //get customer from customer id
 router.get("/customer/specific", async(req, res)=>{
@@ -79,10 +66,10 @@ router.get("/customer/specific", async(req, res)=>{
 });
 
 // delete customer from customer id
-router.delete("/customer/:customerid", async(req, res)=>{
+router.delete("/customer", async(req, res)=>{
 
     try {
-        const custid = req.params.customerid;
+        const custid = req.body.customerid;
         console.log("Deleting customer with customer ID: "+custid+".")
 
         const deleteCustomer = await pool.query("DELETE FROM customer WHERE customerid = $1", [custid]);
@@ -137,7 +124,7 @@ router.put("/customer/firstname", async(req, res)=>{
         const firstname = req.body.firstname;
         console.debug("Updating customer firstname of customer with customer ID: "+customerid+" to "+firstname+".");
 
-        const updateCustomer = await pool.query("UPDATE customer SET first name = $1 WHERE customerid = $2 RETURNING *", [firstname, customerid]);
+        const updateCustomer = await pool.query("UPDATE customer SET firstname = $1 WHERE customerid = $2 RETURNING *", [firstname, customerid]);
         res.json(updateCustomer.rows);
 
     } catch (err) {
@@ -152,7 +139,7 @@ router.put("/customer/lastname", async(req, res)=>{
     try {
         const customerid = req.body.customerid;
         const lastname = req.body.lastname;
-        console.debug("Updating customer last name of customer with customer ID: "+customerid+" to "+sin+".");
+        console.debug("Updating customer last name of customer with customer ID: "+customerid+" to "+lastname+".");
 
         const updateCustomer = await pool.query("UPDATE customer SET lastname = $1 WHERE customerid = $2 RETURNING *", [lastname, customerid]);
         res.json(updateCustomer.rows);
