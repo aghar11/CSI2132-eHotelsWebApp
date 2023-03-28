@@ -62,8 +62,8 @@ router.get("/room/specific", async(req, res)=>{
 });
 
 
-router.put("/room/price", async(req, res)=>{
 
+router.put("/room/price", async(req, res)=>{
     try {
         const roomNumber = req.body.roomNumber;
         const hotelID = req.body.hotelID;
@@ -80,6 +80,7 @@ router.put("/room/price", async(req, res)=>{
     }
     
 });
+
 router.put("/room/capacity", async(req, res)=>{
 
     try {
@@ -98,6 +99,7 @@ router.put("/room/capacity", async(req, res)=>{
     }
     
 });
+
 router.put("/room/viewtype", async(req, res)=>{
 
     try {
