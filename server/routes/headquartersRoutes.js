@@ -74,14 +74,14 @@ router.get("/headquarters", async(req, res) => {
 /**
  * Get headquarter by primary key
  * 
- * Endpoint: /api/headquarters
+ * Endpoint: /api/headquarters/specifc
  * Request Type: GET
  * Request Body:
  *  { 
  *      "companyName": "Mariott"
  *  }
  */
-router.get("/headquarters", async(req , res) => {
+router.get("/headquarters/specific", async(req , res) => {
     try {
         const companyName = req.body.companyName;
         console.debug("Retrieving Headquarter with company name: "+JSON.stringify(companyName)+" from database.");
