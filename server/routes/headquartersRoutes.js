@@ -222,14 +222,16 @@ router.delete("/headquarters/:companyName/phone", async(req, res) => {
 /**
  * Find all phonenumbers for a certain headquarter.
  * 
- * Endpoint: /api/headquarter/:companyName/phone
+ * Endpoint: /api/headquarters/:companyName/phone
  * Request Type: GET
  * Request Body:
  *  { }
  */
-router.get("/headquarter/:companyName/phone", async(req, res) => {
+router.get("/headquarters/:companyName/phone", async(req, res) => {
     try {
-        const companyName = req.params;
+        const companyName = req.params.companyName;
+
+        console.debug("Retrieving all phone numbers for Headquarter with company name: "+companyName+".");
 
         const phoneNumbers = await pool.query("SELECT * FROM HeadquartersPhone WHERE CompanyName = $1", [companyName]);
 
