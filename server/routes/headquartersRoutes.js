@@ -38,7 +38,7 @@ router.post("/headquarters", async(req, res) => {
     try {
         const headquarter = req.body;
         const address = req.body.address;
-        console.debug("Adding Headquarter: "+JSON.stringify()+" to database.")
+        console.debug("Adding Headquarter: "+JSON.stringify(headquarter)+" to database.")
 
         const newHeadquarter =  await pool.query(
             "INSERT INTO Headquarters (CompanyName, NumberOfHotels, StreetNumber, StreetName, AptNumber, City, State, PostalCode) VALUES \
