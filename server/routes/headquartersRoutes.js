@@ -178,7 +178,7 @@ router.delete("/headquarters", async(req, res) => {
 /**
  * Create headquarter phone instance.
  * 
- * Endpoint: /api/headquarters/:companyName/phone
+ * Endpoint: /api/headquarters/phone
  * Request Type: POST
  * Request Body:
  *  {
@@ -204,7 +204,7 @@ router.post("/headquarters/phone", async(req, res) => {
 /**
  * Delete headquarter phone instance.
  * 
- * Endpoint: /api/headquarters/:companyName/phone
+ * Endpoint: /api/headquarters/phone
  * Request Type: DELETE
  * Request Body:
  *  {
@@ -315,7 +315,7 @@ router.delete("/headquarters/email", async(req, res) => {
  */
 router.get("/headquarters/email", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
 
         console.debug("Retrieving all emails for Headquarter with company name : "+companyName+".");
 
