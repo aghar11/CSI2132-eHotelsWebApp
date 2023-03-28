@@ -222,4 +222,78 @@ router.delete("/roomamenity/byAmenity/:amenity", async(req, res)=>{
     }
 });
 
+//Issue
+
+router.post("/roomissue", async(req, res)=> {
+    try {
+        const roomissue = req.body;
+        console.log("Adding Room Issue: "+JSON.stringify(roomissue)+" to database.");
+
+        const newRoomIssue = await pool.query(
+            "INSERT INTO RoomIssue (Issue, RoomNumber, HotelID, CompanyName) VALUES ($1, $2, $3, $4) RETURNING *", [roomissue.issue, 
+                roomissue.roomnumber, roomissue.hotelid, roomissue.companyname]
+        );
+        res.json(newRoomIssue.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.get("/roomissue", async(req, res)=>{
+
+    try {
+        const {roomissue} = req.params;
+        console.debug("Retriving Room with Room Number:"+ roomissue +" from database.")
+
+        const room = await pool.query("SELECT * FROM RoomIssue")
+        res.json(room.rows[0]);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+router.get("/roomissue/byRoomNumber/:roomnumber", async(req, res)=>{
+
+    try {
+        const {roomnumber} = req.params;
+        console.debug("Retriving RoomIssue with Room Number:"+ roomnumber +" from database.")
+
+        const roomissue = await pool.query("SELECT * FROM RoomIssue WHERE roomnumber = $1", [roomnumber])
+        res.json(roomissue.rows[0]);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+router.get("/roomissue/byHotelID/:hotelid", async(req, res)=>{
+
+    try {
+        const {hotelid} = req.params;
+        console.debug("Retriving RoomIssue with Room Number:"+ hotelid +" from database.")
+
+        const roomissue = await pool.query("SELECT * FROM RoomIssue WHERE hotelid = $1", [hotelid])
+        res.json(roomissue.rows[0]);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+
+router.delete("/roomissue/byRoomNumber/:roomnumber", async(req, res)=>{
+
+    try {
+        const {roomnumber} = req.params;
+        console.log("Deleting Room Issue with RoomNumber:"+roomnumber+".")
+
+        const deleteRoom = await pool.query("DELETE FROM RoomIssue WHERE roomnumber = $1", [roomnumber]);
+        res.json("Room was deleted!");
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
 module.exports = router;
