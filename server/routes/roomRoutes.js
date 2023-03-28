@@ -45,13 +45,14 @@ router.get("/room", async(req, res)=>{
     
 });
 
-router.get("/room/:roomNumber", async(req, res)=>{
+router.get("/room/specific", async(req, res)=>{
 
     try {
-        const {roomNumber} = req.params;
-        console.debug("Retriving Room with Room Number:"+ roomNumber +" from database.")
+        const requestBody = req.body;
+        console.debug("Retriving Room: "+JSON.stringify(requestBody));
 
-        const room = await pool.query("SELECT * FROM room WHERE roomNumber = $1", [roomNumber])
+        const room = await pool.query("SELECT * FROM room WHERE (roomNumber = $1 AND hotelid = $2 AND companyname = $3)", 
+        [requestBody.roomNumber, requestBody.hotelID, requestBody.companyName]);
         res.json(room.rows[0]);
 
     } catch (err) {
@@ -61,10 +62,10 @@ router.get("/room/:roomNumber", async(req, res)=>{
 });
 
 
-router.put("/room/price/:roomNumber", async(req, res)=>{
+router.put("/room/price", async(req, res)=>{
 
     try {
-        const roomNumber = req.params.roomNumber;
+        const roomNumber = req.body.roomNumber;
         const price = req.body.price;
         console.debug("Updating Room Price of Room with ID:"+roomNumber+" to "+price+".");
 
@@ -76,10 +77,10 @@ router.put("/room/price/:roomNumber", async(req, res)=>{
     }
     
 });
-router.put("/room/capacity/:roomNumber", async(req, res)=>{
+router.put("/room/capacity", async(req, res)=>{
 
     try {
-        const roomNumber = req.params.roomNumber;
+        const roomNumber = req.body.roomNumber;
         const capacity = req.body.capacity;
         console.debug("Updating room capacity of room with ID:"+roomNumber+" to "+capacity+".");
 
@@ -91,10 +92,10 @@ router.put("/room/capacity/:roomNumber", async(req, res)=>{
     }
     
 });
-router.put("/room/viewtype/:roomNumber", async(req, res)=>{
+router.put("/room/viewtype", async(req, res)=>{
 
     try {
-        const roomNumber = req.params.roomNumber;
+        const roomNumber = req.body.roomNumber;
         const viewtype = req.body.viewtype;
         console.debug("Updating room viewtype of room with ID:"+roomNumber+" to "+viewtype+".");
 
@@ -107,13 +108,14 @@ router.put("/room/viewtype/:roomNumber", async(req, res)=>{
     
 });
 
-router.delete("/room/:roomNumber", async(req, res)=>{
+router.delete("/room", async(req, res)=>{
 
     try {
-        const {roomNumber} = req.params;
-        console.log("Deleting room with ID:"+roomNumber+".")
+        const requestBody = req.body;
+        console.log("Deleting room: "+JSON.stringify(requestBody));
 
-        const deleteRoom = await pool.query("DELETE FROM room WHERE roomNumber = $1", [roomNumber]);
+        const deleteRoom = await pool.query("DELETE FROM room WHERE (roomNumber = $1 AND hotelid = $2 AND companyName = $3", 
+        [requestBody.roomNumber, requestBody.hotelid, requestBody.companyname]);
         res.json("Room was deleted!");
 
     } catch (err) {
