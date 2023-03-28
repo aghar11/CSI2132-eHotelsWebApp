@@ -197,19 +197,21 @@ router.post("/headquarters/:companyName/phone", async(req, res) => {
 /**
  * Delete headquarter phone instance.
  * 
- * Endpoint: /api/headquarter/:companyName/phone
+ * Endpoint: /api/headquarters/:companyName/phone
  * Request Type: DELETE
  * Request Body:
  *  {
  *      "phoneNumber": "400 123 1222"
  *  }
  */
-router.delete("/headquarter/:companyName/phone", async(req, res) => {
+router.delete("/headquarters/:companyName/phone", async(req, res) => {
     try {
-        const companyName = req.params;
+        const companyName = req.params.companyName;
         const phoneNumber = req.body.phoneNumber;
 
-        const deletePhone = await pool.query("DELETE FROM HeadquartersPhone WHERE (CompanyName = $1 AND phoneNumber = $2", [companyName, phoneNumber]);
+        console.debug("Deleting Headquarter phone instance( "+companyName+", "+phoneNumber+").");
+
+        const deletePhone = await pool.query("DELETE FROM HeadquartersPhone WHERE (CompanyName = $1 AND phoneNumber = $2)", [companyName, phoneNumber]);
 
         res.json("Phone number was deleted!");
     } catch (err) {
