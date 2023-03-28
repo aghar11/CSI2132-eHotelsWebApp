@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS HeadquartersEmail(
 );
 
 CREATE TABLE IF NOT EXISTS Hotel (
-	HotelID Integer UNIQUE,
+	HotelID Integer,
 	CompanyName Varchar(225) NOT NULL,
 	Category Varchar(225) NOT NULL,
 	NumberOfRooms Integer NOT NULL,
