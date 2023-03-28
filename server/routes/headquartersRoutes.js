@@ -216,52 +216,6 @@ router.delete("/headquarter/:companyName/phone", async(req, res) => {
 });
 
 /**
- * Create headquarter phone instance.
- * 
- * Endpoint: /api/headquarter/:companyName/phone
- * Request Type: POST
- * Request Body:
- *  {
- *      "phoneNumber": "400 123 1222"
- *  }
- */
-router.post("/headquarter/:companyName/phone", async(req, res) => {
-    try {
-        const companyName = req.params;
-        const phoneNumber = req.body.phoneNumber;
-
-        const newPhoneNumber = await pool.query("INSERT INTO HeadquartersPhone (CompanyName, phoneNumber) VALUES ($1, $2) RETURNING *", [companyName, phoneNumber]);
-
-        res.json(newPhoneNumber.rows);
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-/**
- * Delete headquarter phone instance.
- * 
- * Endpoint: /api/headquarter/:companyName/phone
- * Request Type: DELETE
- * Request Body:
- *  {
- *      "phoneNumber": "400 123 1222"
- *  }
- */
-router.delete("/headquarter/:companyName/phone", async(req, res) => {
-    try {
-        const companyName = req.params;
-        const phoneNumber = req.body.phoneNumber;
-
-        const deletePhone = await pool.query("DELETE FROM HeadquartersPhone WHERE (CompanyName = $1 AND phoneNumber = $2", [companyName, phoneNumber]);
-
-        res.json("Phone number was deleted!");
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-/**
  * Find all phonenumbers for a certain headquarter.
  * 
  * Endpoint: /api/headquarter/:companyName/phone
