@@ -66,10 +66,13 @@ router.put("/room/price", async(req, res)=>{
 
     try {
         const roomNumber = req.body.roomNumber;
+        const hotelID = req.body.hotelID;
+        const companyName = req.body.companyName;
         const price = req.body.price;
         console.debug("Updating Room Price of Room with ID:"+roomNumber+" to "+price+".");
 
-        const updateRoom = await pool.query("UPDATE room SET price = $1 WHERE roomNumber = $2 RETURNING *", [price, roomNumber]);
+        const updateRoom = await pool.query("UPDATE room SET price = $1 WHERE (roomNumber = $2 AND hotelID = $3 AND companyName = $4) RETURNING *", 
+        [price, roomNumber, hotelID, companyName]);
         res.json(updateRoom.rows);
 
     } catch (err) {
@@ -81,10 +84,13 @@ router.put("/room/capacity", async(req, res)=>{
 
     try {
         const roomNumber = req.body.roomNumber;
+        const hotelID = req.body.hotelID;
+        const companyName = req.body.companyName;
         const capacity = req.body.capacity;
         console.debug("Updating room capacity of room with ID:"+roomNumber+" to "+capacity+".");
 
-        const updateRoom = await pool.query("UPDATE room SET capacity = $1 WHERE roomNumber = $2 RETURNING *", [capacity, roomNumber]);
+        const updateRoom = await pool.query("UPDATE room SET capacity = $1 WHERE (roomNumber = $2 AND hotelID = $3 AND companyName = $4) RETURNING *", 
+        [capacity, roomNumber, hotelID, companyName]);
         res.json(updateRoom.rows);
 
     } catch (err) {
@@ -96,10 +102,13 @@ router.put("/room/viewtype", async(req, res)=>{
 
     try {
         const roomNumber = req.body.roomNumber;
+        const hotelID = req.body.hotelID;
+        const companyName = req.body.companyName;
         const viewtype = req.body.viewtype;
         console.debug("Updating room viewtype of room with ID:"+roomNumber+" to "+viewtype+".");
 
-        const updateRoom = await pool.query("UPDATE room SET viewtype = $1 WHERE roomNumber = $2 RETURNING *", [viewtype, roomNumber]);
+        const updateRoom = await pool.query("UPDATE room SET viewtype = $1 WHERE (roomNumber = $2 AND hotelID = $3 AND companyName = $4) RETURNING *",
+         [viewtype, roomNumber, hotelID, companyName]);
         res.json(updateRoom.rows);
 
     } catch (err) {
