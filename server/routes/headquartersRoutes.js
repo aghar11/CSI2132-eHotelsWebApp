@@ -152,17 +152,17 @@ router.put("/headquarters/address/:companyName", async(req, res) => {
 /**
  * Delete headquarter by company name.
  * 
- * Endpoint: /api/headquarter/:companyName
+ * Endpoint: /api/headquarters/:companyName
  * Request Type: DELETE
  * Request Body:
  *  {   }
  */
-router.delete("/headquarter/:companyName", async(req, res) => {
+router.delete("/headquarters/:companyName", async(req, res) => {
     try {
-        const companyName = req.params;
+        const companyName = req.params.companyName;
         console.debug("Deleting Headquarter with company name: "+companyName+".");
 
-        const deleteHeadquarter = await pool.query("DELETE FROM Hotel WHERE CompanyName = $1", [companyName]);
+        const deleteHeadquarter = await pool.query("DELETE FROM Headquarters WHERE CompanyName = $1", [companyName]);
         res.json("Headquarter was deleted!")
     } catch (err) {
         console.error(err.message);
