@@ -32,7 +32,7 @@ const router = express.Router();
 router.post("/hotel", async(req, res)=> {
     try {
         const hotel = req.body;
-        console.log("Adding Hotel: "+JSON.stringify(hotel)+" to database.");
+        console.debug("Adding Hotel: "+JSON.stringify(hotel)+" to database.");
 
         const newHotel = await pool.query(
             "INSERT INTO Hotel (HotelID, CompanyName, Address, Category, NumberOfRooms) VALUES ($1, $2, $3, $4, $5) RETURNING *", [hotel.hotelID, 
@@ -106,7 +106,7 @@ router.put("/hotel/category/:id", async(req, res)=>{
         const {category} = req.body.category;
         console.debug("Updating Hotel category of hotel with ID:"+id+" to "+category+".");
 
-        const updateHotel = await pool.query("UPDATE Hotel SET category = $1 WHERE HotelID = $2", [category, id]);
+        const updateHotel = await pool.query("UPDATE Hotel SET Category = $1 WHERE HotelID = $2", [category, id]);
         res.json("Hotel was updated!");
 
     } catch (err) {
@@ -127,7 +127,7 @@ router.delete("/hotel/:id", async(req, res)=>{
 
     try {
         const {id} = req.params;
-        console.log("Deleting Hotel with ID:"+id+".")
+        console.debug("Deleting Hotel with ID:"+id+".")
 
         const deleteHotel = await pool.query("DELETE FROM Hotel WHERE HotelID = $1", [id]);
         res.json("Hotel was deleted!");
