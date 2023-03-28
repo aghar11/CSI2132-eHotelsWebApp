@@ -72,16 +72,18 @@ router.get("/headquarters", async(req, res) => {
 });
 
 /**
- * Get headquarter by comapanyName
+ * Get headquarter by primary key
  * 
- * Endpoint: /api/headquarters/:companyName
+ * Endpoint: /api/headquarters
  * Request Type: GET
  * Request Body:
- *  { }
+ *  { 
+ *      "companyName": "Mariott"
+ *  }
  */
-router.get("/headquarters/:companyName", async(req , res) => {
+router.get("/headquarters", async(req , res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         console.debug("Retrieving Headquarter with company name: "+JSON.stringify(companyName)+" from database.");
 
         const headquarter = await pool.query("SELECT * FROM Headquarters WHERE CompanyName = $1", [companyName]);
@@ -94,16 +96,17 @@ router.get("/headquarters/:companyName", async(req , res) => {
 /**
  * Update headquarter number of hotels.
  * 
- * Endpoint: /api/headquarters/numberOfHotels/:companyName
+ * Endpoint: /api/headquarters/numberOfHotels
  * Request Type: PUT
  * Request Body:
  *  {
+ *      "companyName": "Mariott"
  *      "numberOfHotels": 12
  *  }
  */
-router.put("/headquarters/numberOfHotels/:companyName", async(req, res) => {
+router.put("/headquarters/numberOfHotels", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         const numberOfHotels = req.body.numberOfHotels;
         console.debug("Updating Headquarter number of hotels of headquarter with Company Name:"
         +companyName+" to "+numberOfHotels+".");
@@ -119,10 +122,11 @@ router.put("/headquarters/numberOfHotels/:companyName", async(req, res) => {
 /**
  * Update headquarter address.
  * 
- * Endpoint: /api/headquarters/address/:companyName
+ * Endpoint: /api/headquarters/address
  * Request Type: PUT
  * Request Body:
  *  {
+ *      "companyName": "Mariott",
  *      "address": {
  *          "streetNumber": 12,
  *          "streetName": "Mariott Way",
@@ -133,9 +137,9 @@ router.put("/headquarters/numberOfHotels/:companyName", async(req, res) => {
  *      }
  *  }
  */
-router.put("/headquarters/address/:companyName", async(req, res) => {
+router.put("/headquarters/address", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         const address = req.body.address;
         console.debug("Updating Headquarter address of headquarter with Company Name:"
         +companyName+" to "+JSON.stringify(address)+".");
@@ -155,11 +159,13 @@ router.put("/headquarters/address/:companyName", async(req, res) => {
  * Endpoint: /api/headquarters/:companyName
  * Request Type: DELETE
  * Request Body:
- *  {   }
+ *  {
+ *      "companyName": "Mariott"
+ *  }
  */
-router.delete("/headquarters/:companyName", async(req, res) => {
+router.delete("/headquarters", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         console.debug("Deleting Headquarter with company name: "+companyName+".");
 
         const deleteHeadquarter = await pool.query("DELETE FROM Headquarters WHERE CompanyName = $1", [companyName]);
@@ -176,12 +182,13 @@ router.delete("/headquarters/:companyName", async(req, res) => {
  * Request Type: POST
  * Request Body:
  *  {
+ *      "companyName": "Mariott",
  *      "phoneNumber": "400 123 1222"
  *  }
  */
-router.post("/headquarters/:companyName/phone", async(req, res) => {
+router.post("/headquarters/phone", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         const phoneNumber = req.body.phoneNumber;
         
         console.debug("Creating Headquarter phone instance( "+companyName+", "+phoneNumber+").");
@@ -201,12 +208,13 @@ router.post("/headquarters/:companyName/phone", async(req, res) => {
  * Request Type: DELETE
  * Request Body:
  *  {
+ *      "companyName": "Mariott",
  *      "phoneNumber": "400 123 1222"
  *  }
  */
-router.delete("/headquarters/:companyName/phone", async(req, res) => {
+router.delete("/headquarters/phone", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         const phoneNumber = req.body.phoneNumber;
 
         console.debug("Deleting Headquarter phone instance( "+companyName+", "+phoneNumber+").");
@@ -222,14 +230,16 @@ router.delete("/headquarters/:companyName/phone", async(req, res) => {
 /**
  * Find all phonenumbers for a certain headquarter.
  * 
- * Endpoint: /api/headquarters/:companyName/phone
+ * Endpoint: /api/headquarters/phone
  * Request Type: GET
  * Request Body:
- *  { }
+ *  {
+ *      "companyName": "Mariott"
+ *  }
  */
-router.get("/headquarters/:companyName/phone", async(req, res) => {
+router.get("/headquarters/phone", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
 
         console.debug("Retrieving all phone numbers for Headquarter with company name: "+companyName+".");
 
@@ -244,16 +254,17 @@ router.get("/headquarters/:companyName/phone", async(req, res) => {
 /**
  * Create headquarter email instance.
  * 
- * Endpoint: /api/headquarters/:companyName/email
+ * Endpoint: /api/headquarters/email
  * Request Type: POST
  * Request Body:
  *  {
+ *      "companyName": "Mariott",
  *      "email": "test@gmail.com"
  *  }
  */
-router.post("/headquarters/:companyName/email", async(req, res) => {
+router.post("/headquarters/email", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         const email = req.body.email;
 
         console.debug("Creating Headquarter email instance( "+companyName+", "+email+").");
@@ -269,16 +280,17 @@ router.post("/headquarters/:companyName/email", async(req, res) => {
 /**
  * Delete headquarter email instance.
  * 
- * Endpoint: /api/headquarters/:companyName/email
+ * Endpoint: /api/headquarters/email
  * Request Type: DELETE
  * Request Body:
  *  {
+ *      "companyName": "Mariott",
  *      "email": "test@gmail.com"
  *  }
  */
-router.delete("/headquarters/:companyName/email", async(req, res) => {
+router.delete("/headquarters/email", async(req, res) => {
     try {
-        const companyName = req.params.companyName;
+        const companyName = req.body.companyName;
         const email = req.body.email;
 
         console.debug("Deleting Headquarter email instance( "+companyName+", "+email+").");
@@ -297,9 +309,11 @@ router.delete("/headquarters/:companyName/email", async(req, res) => {
  * Endpoint: /api/headquarters/:companyName/email
  * Request Type: GET
  * Request Body:
- *  { }
+ *  {
+ *      "companyName": "Mariott"
+ *  }
  */
-router.get("/headquarters/:companyName/email", async(req, res) => {
+router.get("/headquarters/email", async(req, res) => {
     try {
         const companyName = req.params.companyName;
 
