@@ -135,13 +135,13 @@ router.put("/headquarters/numberOfHotels/:companyName", async(req, res) => {
  */
 router.put("/headquarters/address/:companyName", async(req, res) => {
     try {
-        const companyName = req.params;
+        const companyName = req.params.companyName;
         const address = req.body.address;
         console.debug("Updating Headquarter address of headquarter with Company Name:"
-        +companyName+" to "+address+".");
+        +companyName+" to "+JSON.stringify(address)+".");
 
-        const updatedHeadquarter = await pool.query("UPDATE Headquarter SET StreetNumber = $1, StreetName = $2, AptNumber = $3, City = $4, State = $5, PostalCode =$6 \
-        WHERE CompanyName = $7",
+        const updatedHeadquarter = await pool.query("UPDATE Headquarters SET StreetNumber = $1, StreetName = $2, AptNumber = $3, City = $4, State = $5, PostalCode =$6 \
+        WHERE CompanyName = $7 RETURNING *",
         [address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode, companyName]);
         res.json(updatedHeadquarter.rows);
     } catch (err) {
