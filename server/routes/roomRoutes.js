@@ -136,21 +136,23 @@ router.delete("/room/:roomNumber", async(req, res)=>{
 });
 
 //ROOM AMENITY 
-router.post("room/:roomnumber/roomamenity", async(req, res)=> {
+router.post("/roomamenity", async(req, res)=> {
     try {
-        const roomnumber = req.params;
-        const roomamenity = res.body;
-        console.debug("Creating Room roomamenity instance( "+roomamenity+", "+roomnumber+").");
+        const roomamenity = req.body;
+        console.log("Adding Room Amenity: "+JSON.stringify(roomamenity)+" to database.");
 
-        const newAmenity = await pool.query("INSERT INTO RoomAmenity (Amenity, RoomNumber, HotelID, CompanyName) VALUES ($1, $2, $3, $4) RETURNING *", [roomamenity.amenity,roomnumber,roomamenity.hotelid,roomamenity.companyname]);
+        const newRoomAmenity = await pool.query(
+            "INSERT INTO RoomAmenity (Amenity, RoomNumber, HotelID, CompanyName) VALUES ($1, $2, $3, $4) RETURNING *", [roomamenity.amenity, 
+                roomamenity.roomnumber, roomamenity.hotelid, roomamenity.companyname]
+        );
+        res.json(newRoomAmenity.rows);
 
-        res.json(newAmenity.rows);
     } catch (err) {
         console.error(err.message);
     }
 });
 
-router.get("/roomamenity/", async(req, res)=>{
+router.get("/roomamenity", async(req, res)=>{
 
     try {
         const {amenity} = req.params;
@@ -193,26 +195,26 @@ router.get("/roomamenity/byAmenity/:amenity", async(req, res)=>{
     }
     
 });
-router.delete("/roomamenity/:roomnumber", async(req, res)=>{
+router.delete("/roomamenity/byRoomNumber/:roomnumber", async(req, res)=>{
 
     try {
         const {roomnumber} = req.params;
-        console.log("Deleting room with ID:"+roomnumber+".")
+        console.log("Deleting Amenity with RoomNumber:"+roomnumber+".")
 
-        const deleteRoom = await pool.query("DELETE FROM roomamenity WHERE roomnumber = $1", [roomNumber]);
+        const deleteRoom = await pool.query("DELETE FROM roomamenity WHERE roomnumber = $1", [roomnumber]);
         res.json("Room was deleted!");
 
     } catch (err) {
         console.error(err.message);
     }
 });
-router.delete("/roomamenity/:roomnumber", async(req, res)=>{
+router.delete("/roomamenity/byAmenity/:amenity", async(req, res)=>{
 
     try {
-        const {roomnumber} = req.params;
-        console.log("Deleting room with ID:"+roomnumber+".")
+        const {amenity} = req.params;
+        console.log("Deleting room with Amenity:"+amenity+".")
 
-        const deleteRoom = await pool.query("DELETE FROM roomamenity WHERE roomnumber = $1", [roomNumber]);
+        const deleteRoom = await pool.query("DELETE FROM roomamenity WHERE Amenity = $1", [amenity]);
         res.json("Room was deleted!");
 
     } catch (err) {
