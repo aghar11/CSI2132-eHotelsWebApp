@@ -172,18 +172,20 @@ router.delete("/headquarters/:companyName", async(req, res) => {
 /**
  * Create headquarter phone instance.
  * 
- * Endpoint: /api/headquarter/:companyName/phone
+ * Endpoint: /api/headquarters/:companyName/phone
  * Request Type: POST
  * Request Body:
  *  {
  *      "phoneNumber": "400 123 1222"
  *  }
  */
-router.post("/headquarter/:companyName/phone", async(req, res) => {
+router.post("/headquarters/:companyName/phone", async(req, res) => {
     try {
-        const companyName = req.params;
+        const companyName = req.params.companyName;
         const phoneNumber = req.body.phoneNumber;
-
+        
+        console.debug("Creating Headquarter phone instance( "+companyName+", "+phoneNumber+").");
+        
         const newPhoneNumber = await pool.query("INSERT INTO HeadquartersPhone (CompanyName, phoneNumber) VALUES ($1, $2) RETURNING *", [companyName, phoneNumber]);
 
         res.json(newPhoneNumber.rows);
