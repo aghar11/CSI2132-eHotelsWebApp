@@ -51,7 +51,7 @@ router.get("/room/:roomNumber", async(req, res)=>{
         const {roomNumber} = req.params;
         console.debug("Retriving Room with Room Number:"+ roomNumber +" from database.")
 
-        const hotel = await pool.query("SELECT * FROM room WHERE roomNumber = $1", [roomNumber])
+        const room = await pool.query("SELECT * FROM room WHERE roomNumber = $1", [roomNumber])
         res.json(room.rows[0]);
 
     } catch (err) {
@@ -62,12 +62,12 @@ router.get("/room/:roomNumber", async(req, res)=>{
 router.put("/room/price/:roomNumber", async(req, res)=>{
 
     try {
-        const {roomNumber} = req.params;
-        const {price} = req.body.price;
+        const roomNumber = req.params.roomNumber;
+        const price = req.body.price;
         console.debug("Updating Room Price of Room with ID:"+roomNumber+" to "+price+".");
 
-        const updateHotel = await pool.query("UPDATE room SET price = $1 WHERE roomNumber = $2", [price, roomNumber]);
-        res.json("Room was updated!");
+        const updateRoom = await pool.query("UPDATE room SET price = $1 WHERE roomNumber = $2 RETURNING *", [price, roomNumber]);
+        res.json(updateRoom.rows);
 
     } catch (err) {
         console.error(err.message);
@@ -77,27 +77,27 @@ router.put("/room/price/:roomNumber", async(req, res)=>{
 router.put("/room/capacity/:roomNumber", async(req, res)=>{
 
     try {
-        const {roomNumber} = req.params;
-        const {capacity} = req.body.capacity;
+        const roomNumber = req.params.roomNumber;
+        const capacity = req.body.capacity;
         console.debug("Updating room capacity of room with ID:"+roomNumber+" to "+capacity+".");
 
-        const updateHotel = await pool.query("UPDATE room SET capacity = $1 WHERE roomNumber = $2", [capacity, roomNumber]);
-        res.json("Room was updated!");
+        const updateRoom = await pool.query("UPDATE room SET capacity = $1 WHERE roomNumber = $2 RETURNING *", [capacity, roomNumber]);
+        res.json(updateRoom.rows);
 
     } catch (err) {
         console.error(err.message);
     }
     
 });
-router.put("/room/category/:roomNumber", async(req, res)=>{
+router.put("/room/viewtype/:roomNumber", async(req, res)=>{
 
     try {
-        const {id} = req.params;
-        const {category} = req.body.category;
-        console.debug("Updating Hotel category of hotel with ID:"+id+" to "+category+".");
+        const roomNumber = req.params.roomNumber;
+        const viewtype = req.body.viewtype;
+        console.debug("Updating room viewtype of room with ID:"+roomNumber+" to "+viewtype+".");
 
-        const updateHotel = await pool.query("UPDATE Hotel SET category = $1 WHERE HotelID = $2", [category, id]);
-        res.json("Hotel was updated!");
+        const updateRoom = await pool.query("UPDATE room SET viewtype = $1 WHERE roomNumber = $2 RETURNING *", [viewtype, roomNumber]);
+        res.json(updateRoom.rows);
 
     } catch (err) {
         console.error(err.message);
