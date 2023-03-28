@@ -15,6 +15,7 @@ const router = express.Router();
  * Room API Routes
  */
 
+//ROOM 
 router.post("/room", async(req, res)=> {
     try {
         const room = req.body;
@@ -120,5 +121,103 @@ router.delete("/room/:roomNumber", async(req, res)=>{
     
 });
 
+router.delete("/room/:roomNumber", async(req, res)=>{
+
+    try {
+        const {roomNumber} = req.params;
+        console.log("Deleting room with ID:"+roomNumber+".")
+
+        const deleteRoom = await pool.query("DELETE FROM room WHERE roomNumber = $1", [roomNumber]);
+        res.json("Room was deleted!");
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+//ROOM AMENITY 
+router.post("room/:roomnumber/roomamenity", async(req, res)=> {
+    try {
+        const roomnumber = req.params.roomnumber;
+        const roomamenity = res.body;
+        console.debug("Creating Room roomamenity instance( "+roomamenity+", "+roomnumber+").");
+
+        const newAmenity = await pool.query("INSERT INTO RoomAmenity (Amenity, RoomNumber, HotelID, CompanyName) VALUES ($1, $2, $3, $4) RETURNING *", [roomamenity.amenity,roomnumber,roomamenity.hotelid,roomamenity.companyname]);
+
+        res.json(newAmenity.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.get("/roomamenity/", async(req, res)=>{
+
+    try {
+        const {amenity} = req.params;
+        console.debug("Retriving Room with Room Number:"+ amenity +" from database.")
+
+        const room = await pool.query("SELECT * FROM roomamenity")
+        res.json(room.rows[0]);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+router.get("/roomamenity/byRoomNumber/:roomnumber", async(req, res)=>{
+
+    try {
+        const {roomnumber} = req.params;
+        console.debug("Retriving RoomAmenity with Room Number:"+ roomnumber +" from database.")
+
+        const roomamenity = await pool.query("SELECT * FROM roomamenity WHERE roomnumber = $1", [roomnumber])
+        res.json(roomamenity.rows[0]);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+
+router.get("/roomamenity/byAmenity/:amenity", async(req, res)=>{
+
+    try {
+        const {amenity} = req.params;
+        console.debug("Retriving RoomAmenity with Room Amenities:"+ amenity +" from database.")
+
+        const roomamenity = await pool.query("SELECT * FROM roomamenity WHERE amenity = $1", [amenity])
+        res.json(roomamenity.rows[0]);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+router.delete("/roomamenity/:roomnumber", async(req, res)=>{
+
+    try {
+        const {roomnumber} = req.params;
+        console.log("Deleting room with ID:"+roomnumber+".")
+
+        const deleteRoom = await pool.query("DELETE FROM roomamenity WHERE roomnumber = $1", [roomNumber]);
+        res.json("Room was deleted!");
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+router.delete("/roomamenity/:roomnumber", async(req, res)=>{
+
+    try {
+        const {roomnumber} = req.params;
+        console.log("Deleting room with ID:"+roomnumber+".")
+
+        const deleteRoom = await pool.query("DELETE FROM roomamenity WHERE roomnumber = $1", [roomNumber]);
+        res.json("Room was deleted!");
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
 
 module.exports = router;
