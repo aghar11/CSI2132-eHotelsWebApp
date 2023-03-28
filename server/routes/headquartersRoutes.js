@@ -81,10 +81,10 @@ router.get("/headquarters", async(req, res) => {
  */
 router.get("/headquarters/:companyName", async(req , res) => {
     try {
-        const comapnyName = req.params;
-        console.debug("Retrieving Headquarter with company name: "+comapnyName+" from database.");
+        const companyName = req.params.companyName;
+        console.debug("Retrieving Headquarter with company name: "+JSON.stringify(companyName)+" from database.");
 
-        const headquarter = await pool.query("SELECT * FROM Headquarters WHERE companyName = $1", [comapnyName]);
+        const headquarter = await pool.query("SELECT * FROM Headquarters WHERE CompanyName = $1", [companyName]);
         res.json(headquarter.rows);
     } catch (err) {
         console.error(err.message);
