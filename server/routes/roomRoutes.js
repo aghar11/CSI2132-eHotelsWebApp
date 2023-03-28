@@ -138,7 +138,7 @@ router.delete("/room/:roomNumber", async(req, res)=>{
 //ROOM AMENITY 
 router.post("room/:roomnumber/roomamenity", async(req, res)=> {
     try {
-        const roomnumber = req.params.roomnumber;
+        const roomnumber = req.params;
         const roomamenity = res.body;
         console.debug("Creating Room roomamenity instance( "+roomamenity+", "+roomnumber+").");
 
