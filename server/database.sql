@@ -14,14 +14,14 @@ CREATE TABLE IF NOT EXISTS Headquarters(
 CREATE TABLE IF NOT EXISTS HeadquartersPhone(
 	CompanyName Varchar(225),
 	phoneNumber VarChar(20),
-	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName),
+	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (phoneNumber, CompanyName)
 );
 
 CREATE TABLE IF NOT EXISTS HeadquartersEmail(
 	CompanyName Varchar(225),
 	email VarChar(40),
-	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName),
+	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (email, CompanyName)
 );
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Hotel (
 	City Varchar(225) NOT NULL,
 	State Varchar(225) NOT NULL,
 	PostalCode Varchar(25) NOT NULL,
-	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName),
+	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (HotelID, CompanyName)
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS HotelPhone(
 	HotelID Integer,
 	CompanyName Varchar(225),
 	phoneNumber VarChar(20),
-	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName),
+	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (phoneNumber, HotelID, CompanyName)
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS HotelEmail(
 	HotelID Integer,
 	CompanyName Varchar(225),
 	email VarChar(40),
-	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName),
+	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (email, HotelID, CompanyName)
 );
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS Room (
 	Price Integer NOT NULL,
 	Capacity Integer NOT NULL,
 	Expandable Varchar(225) NOT NULL,
-	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName),
+	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (RoomNumber, HotelID, CompanyName)
 );
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS RoomIssue(
 	RoomNumber Integer,
 	HotelID Integer,
 	CompanyName Varchar(225),
-	FOREIGN KEY (RoomNumber, HotelID, CompanyName) REFERENCES Room(RoomNumber, HotelID, CompanyName),
+	FOREIGN KEY (RoomNumber, HotelID, CompanyName) REFERENCES Room(RoomNumber, HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (Issue, RoomNumber, HotelID, CompanyName)
 );
 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS RoomAmenity(
 	RoomNumber Integer,
 	HotelID Integer,
 	CompanyName Varchar(225),
-	FOREIGN KEY (RoomNumber, HotelID, CompanyName) REFERENCES Room(RoomNumber, HotelID, CompanyName),
+	FOREIGN KEY (RoomNumber, HotelID, CompanyName) REFERENCES Room(RoomNumber, HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (Amenity, RoomNumber, HotelID, CompanyName)
 );
 
@@ -108,8 +108,8 @@ CREATE TABLE IF NOT EXISTS Booking (
 	CustomerID Integer,
 	CompanyName Varchar(225),
 	Status Varchar(20),
-	FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-	FOREIGN KEY (RoomNumber, HotelID, CompanyName) REFERENCES Room(RoomNumber, HotelID, CompanyName),
+	FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID) ON DELETE CASCADE,
+	FOREIGN KEY (RoomNumber, HotelID, CompanyName) REFERENCES Room(RoomNumber, HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (CheckInDate, CheckOutDate, RoomNumber, HotelID, CompanyName, CustomerID)
 );
 
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS Employee (
 	City Varchar(225) NOT NULL,
 	State Varchar(225) NOT NULL,
 	PostalCode Varchar(25) NOT NULL,
-	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName),
+	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (EmployeeID, HotelID, CompanyName)
 );
 
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS Manages (
 	EmployeeID Integer,
 	HotelID Integer,
 	CompanyName Varchar(225),
-	FOREIGN KEY (EmployeeID, HotelID, CompanyName) REFERENCES Employee(EmployeeID, HotelID, CompanyName),
+	FOREIGN KEY (EmployeeID, HotelID, CompanyName) REFERENCES Employee(EmployeeID, HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (EmployeeID, HotelID, CompanyName)
 );
 
@@ -144,6 +144,6 @@ CREATE TABLE IF NOT EXISTS EmployeeRole (
 	EmployeeID Integer,
 	HotelID Integer,
 	CompanyName Varchar(225),
-	FOREIGN KEY (EmployeeID, HotelID, CompanyName) REFERENCES Employee(EmployeeID, HotelID, CompanyName),
+	FOREIGN KEY (EmployeeID, HotelID, CompanyName) REFERENCES Employee(EmployeeID, HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (Role, EmployeeID, HotelID, CompanyName)
 );
