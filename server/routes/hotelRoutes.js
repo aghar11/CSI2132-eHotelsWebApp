@@ -22,21 +22,31 @@ const router = express.Router();
  * Request Type: POST
  * Request Body:
  *   {
- *       "hotelID" : 5,
- *       "companyName" : "Tipton",
- *       "address" : "TEST4",
- *       "category": "test",
- *       "numberOfRooms": 12
+ *      "hotelID" : 5,
+ *      "companyName" : "Tipton",
+ *      "address": {
+ *          "streetNumber": 12,
+ *          "streetName": "Mariott Way",
+ *          "aptNumber": 12 (OPTIONAL),
+ *          "city": "New York",
+ *          "state": "New York",
+ *          "postalCode": "00000"
+ *      },
+ *      "category": "test",
+ *      "numberOfRooms": 12
  *   }
  */
 router.post("/hotel", async(req, res)=> {
     try {
         const hotel = req.body;
+        const address = req.body.address;
         console.debug("Adding Hotel: "+JSON.stringify(hotel)+" to database.");
 
         const newHotel = await pool.query(
-            "INSERT INTO Hotel (HotelID, CompanyName, Address, Category, NumberOfRooms) VALUES ($1, $2, $3, $4, $5) RETURNING *", [hotel.hotelID, 
-                hotel.companyName, hotel.address, hotel.category, hotel.numberOfRooms]
+            "INSERT INTO Hotel (HotelID, CompanyName, Category, NumberOfRooms, StreetNumber, StreetName, AptNumber, City, State, PostalCode) \
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *", 
+            [hotel.hotelID, hotel.companyName, hotel.category, hotel.numberOfRooms, 
+            address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
         );
 
         res.json(newHotel.rows);
@@ -68,20 +78,23 @@ router.get("/hotel", async(req, res)=>{
 });
 
 /**
- * Get hotel by hotelID.
+ * Get hotel by primary key.
  * 
- * Endpoint: /api/hotel/:id
+ * Endpoint: /api/hotel/specific
  * Request Type: GET
  * Request Body:
- *   { }
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott"
+ *  }
  */
-router.get("/hotel/:id", async(req, res)=>{
+router.get("/hotel/specific", async(req, res)=>{
 
     try {
-        const {id} = req.params;
-        console.debug("Retriving Hotel with ID:"+id+" from database.")
+        const requestBody = req.body;
+        console.debug("Retriving Hotel: "+JSON.stringify(requestBody));
 
-        const hotel = await pool.query("SELECT * FROM Hotel WHERE HotelID = $1", [id])
+        const hotel = await pool.query("SELECT * FROM Hotel WHERE (HotelID = $1 AND CompanyName = $2)", [requestBody.hotelID, requestBody.companyName]);
         res.json(hotel.rows[0]);
 
     } catch (err) {
@@ -97,16 +110,21 @@ router.get("/hotel/:id", async(req, res)=>{
  * Endpoint: /api/hotel/category/:id
  * Request Type: PUT
  * Request Body:
- *   { "category": "test"}
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott",
+ *      "category": "5 Star"
+ *  }
  */
-router.put("/hotel/category/:id", async(req, res)=>{
+router.put("/hotel/category", async(req, res)=>{
 
     try {
-        const {id} = req.params;
-        const {category} = req.body.category;
-        console.debug("Updating Hotel category of hotel with ID:"+id+" to "+category+".");
+        const requestBody = req.body;
+        console.debug("Updating Hotel category: "+JSON.stringify(requestBody));
 
-        const updateHotel = await pool.query("UPDATE Hotel SET Category = $1 WHERE HotelID = $2", [category, id]);
+        const updateHotel = await pool.query("UPDATE Hotel SET Category = $1 WHERE (HotelID = $2 AND CompanyName = $3)", 
+            [requestBody.category, requestBody.hotelID, requestBody.companyName]
+        );
         res.json("Hotel was updated!");
 
     } catch (err) {
@@ -116,26 +134,189 @@ router.put("/hotel/category/:id", async(req, res)=>{
 });
 
 /**
- * Delete hotel by hotelID.
+ * Delete hotel by primary key.
  * 
- * Endpoint: /api/hotel/:id
+ * Endpoint: /api/hotel
  * Request Type: DELETE
  * Request Body:
- *   { }
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott"
+ *  }
  */
-router.delete("/hotel/:id", async(req, res)=>{
+router.delete("/hotel", async(req, res)=>{
 
     try {
-        const {id} = req.params;
-        console.debug("Deleting Hotel with ID:"+id+".")
+        const requestBody = req.body;
+        console.debug("Deleting Hotel: "+JSON.stringify(requestBody));
 
-        const deleteHotel = await pool.query("DELETE FROM Hotel WHERE HotelID = $1", [id]);
+        const deleteHotel = await pool.query("DELETE FROM Hotel WHERE (HotelID = $1 AND CompanyName = $2)", [requestBody.hotelID, requestBody.companyName]);
         res.json("Hotel was deleted!");
 
     } catch (err) {
         console.error(err.message);
     }
     
+});
+
+/**
+ * Create hotel phone instance.
+ * 
+ * Endpoint: /api/hotel/phone
+ * Request Type: POST
+ * Request Body:
+ *  {
+ *      "hotelID": "1",
+ *      "companyName": "Mariott",
+ *      "phoneNumber": "400 123 1222"
+ *  }
+ */
+router.post("/hotel/phone", async(req, res) => {
+    try {
+        const requestBody = req.body;
+        
+        console.debug("Creating Hotel phone instance"+JSON.stringify(requestBody));
+        
+        const newPhoneNumber = await pool.query("INSERT INTO HotelPhone (HotelID, CompanyName, phoneNumber) VALUES ($1, $2, $3) RETURNING *", 
+            [requestBody.hotelID, requestBody.companyName, requestBody.phoneNumber]);
+
+        res.json(newPhoneNumber.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+/**
+ * Delete hotel phone instance.
+ * 
+ * Endpoint: /api/hotel/phone
+ * Request Type: DELETE
+ * Request Body:
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott",
+ *      "phoneNumber": "400 123 1222"
+ *  }
+ */
+router.delete("/hotel/phone", async(req, res) => {
+    try {
+        const requestBody = req.body;
+
+        console.debug("Deleting Hotel phone instance: "+JSON.stringify(requestBody));
+
+        const deletePhone = await pool.query("DELETE FROM HotelPhone WHERE (HotelID = $1 AND CompanyName = $2 AND phoneNumber = $3)", 
+        [requestBody.hotelID, requestBody.companyName, requestBody.phoneNumber]);
+
+        res.json("Phone number was deleted!");
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+/**
+ * Find all phonenumbers for a certain hotel.
+ * 
+ * Endpoint: /api/hotel/phone
+ * Request Type: GET
+ * Request Body:
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott"
+ *  }
+ */
+router.get("/hotel/phone", async(req, res) => {
+    try {
+        const requestBody = req.body;
+
+        console.debug("Retrieving all phone numbers for Hotel: "+JSON.stringify(requestBody));
+
+        const phoneNumbers = await pool.query("SELECT * FROM HotelPhone WHERE (HotelID = $1 AND CompanyName = $2)", 
+        [requestBody.hotelID, requestBody.companyName]);
+
+        res.json(phoneNumbers.rows);
+    } catch (error) {
+        console.error(err.message);
+    }
+});
+
+/**
+ * Create hotel email instance.
+ * 
+ * Endpoint: /api/hotel/email
+ * Request Type: POST
+ * Request Body:
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott",
+ *      "email": "test@gmail.com"
+ *  }
+ */
+router.post("/hotel/email", async(req, res) => {
+    try {
+        const requestBody = req.body;
+
+        console.debug("Creating Hotel email instance: "+JSON.stringify(requestBody));
+
+        const newEmail = await pool.query("INSERT INTO HotelEmail (HotelID, CompanyName, email) VALUES ($1, $2, $3) RETURNING *", 
+        [requestBody.hotelID, requestBody.companyName, requestBody.email]);
+
+        res.json(newEmail.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+/**
+ * Delete hotel email instance.
+ * 
+ * Endpoint: /api/hotel/email
+ * Request Type: DELETE
+ * Request Body:
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott",
+ *      "email": "test@gmail.com"
+ *  }
+ */
+router.delete("/hotel/email", async(req, res) => {
+    try {
+        const requestBody = req.body;
+
+        console.debug("Deleting Headquarter email instance: "+JSON.stringify(requestBody));
+
+        const deleteEmail = await pool.query("DELETE FROM HotelEmail WHERE (HotelID = $1 AND CompanyName = $2 AND email = $3)", 
+        [requestBody.hotelID, requestBody.companyName, requestBody.email]);
+
+        res.json("Email was deleted!");
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+/**
+ * Find all emails for a certain hotel.
+ * 
+ * Endpoint: /api/hotel/email
+ * Request Type: GET
+ * Request Body:
+ *  {
+ *      "hotelID": 1,
+ *      "companyName": "Mariott"
+ *  }
+ */
+router.get("/headquarters/email", async(req, res) => {
+    try {
+        const requestBody = req.body;
+
+        console.debug("Retrieving all emails for Headquarter: "+JSON.stringify(requestBody));
+
+        const emails = await pool.query("SELECT * FROM HeadquartersEmail WHERE (HotelID = $1 AND CompanyName = $2)", 
+        [requestBody.hotelID, requestBody.companyName]);
+
+        res.json(emails.rows);
+    } catch (error) {
+        console.error(err.message);
+    }
 });
 
 module.exports = router;
