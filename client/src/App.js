@@ -2,10 +2,10 @@ import './App.css';
 import React, { Fragment, useState } from 'react';
 
 //components
-import InputRoom from './components/roomComponents/InputRoom';
-import ListRooms from "./components/roomComponents/ListRooms";
-import InputHotel from './components/hotelComponents/InputHotel';
-import ListHotels from './components/hotelComponents/ListHotels';
+import InputRoom from './components/CustomerView/roomComponents/InputRoom';
+import ListRooms from "./components/CustomerView/roomComponents/ListRooms";
+import InputHotel from './components/EmployeeView/hotelComponents/InputHotel';
+import ListHotels from './components/EmployeeView/hotelComponents/ListHotels';
 
 function App() {
   const [showRoomInput, setShowRoomInput] = useState(false);
