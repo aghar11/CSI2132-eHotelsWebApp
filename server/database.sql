@@ -136,7 +136,8 @@ CREATE TABLE IF NOT EXISTS Manages (
 	HotelID Integer,
 	CompanyName Varchar(225),
 	FOREIGN KEY (EmployeeID, HotelID, CompanyName) REFERENCES Employee(EmployeeID, HotelID, CompanyName) ON DELETE CASCADE,
-	PRIMARY KEY (EmployeeID, HotelID, CompanyName)
+	PRIMARY KEY (EmployeeID, HotelID, CompanyName),
+	CONSTRAINT HotelInfo UNIQUE (HotelID, CompanyName)
 );
 
 CREATE TABLE IF NOT EXISTS EmployeeRole (
