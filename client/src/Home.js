@@ -1,5 +1,6 @@
 import './App.css';
 import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Home() {
     return(
@@ -11,8 +12,12 @@ function Home() {
             </div>
 
             <div className="header" id="buttonSelection">
-                <button id="customerViewButton" type="button" class="btn btn-primary mr-2">Employee View</button>
-                <button id="employeeViewbutton" type="button" class="btn btn-primary ml-2">Customer View</button>
+                <Link to='/customerView'>
+                    <button id="customerViewButton" type="button" class="btn btn-primary mr-2">Customer View</button>
+                </Link>
+                <Link to='/employeeView'>
+                    <button id="employeeViewButton" type="button" class="btn btn-primary mr-2">Employee View</button>
+                </Link>
             </div>
         </div>
     )
