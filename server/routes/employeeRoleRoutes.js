@@ -73,10 +73,10 @@ router.put("/employeeRole/role/:EmployeeID", async(req, res)=>{
 router.delete("/employeeRole/:employeeid", async(req, res)=>{
 
     try {
-        const {employeeid} = req.params;
-        console.debug("Deleting Employee with ID:"+employeeid+".")
+        const {EmployeeID} = req.params;
+        console.debug("Deleting Employee with ID:"+EmployeeID+".")
 
-        const deleteHotel = await pool.query("DELETE FROM employeerole WHERE EmployeeID = $1", [employeeid]);
+        const deleteEmployeeRole = await pool.query("DELETE FROM employeerole WHERE EmployeeID = $1", [EmployeeID]);
         res.json("Employee was deleted!");
 
     } catch (err) {
