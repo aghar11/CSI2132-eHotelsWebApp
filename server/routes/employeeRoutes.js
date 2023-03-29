@@ -1,7 +1,7 @@
 /**
  * Handle API requests related to the Employee table.
  *
- * @author 
+ * @author Axel Tang.
  * @since  March, 2023
  */
 
@@ -15,7 +15,32 @@ const router = express.Router();
  * Employee API Routes
  */
 
-//employee
+/**
+ * Create a new employee
+ * 
+ * Endpoint: /api/employee
+ * Request Type: POST
+ * Request Body:
+ *  {
+ *      "employeeID": 1,
+ *      "SIN": "12234334",
+ *      "hotelID": 1,
+ *      "companyName": "Mariott",
+ *      "name": {
+ *          "firstName": "Bob",
+ *          "middleName": "A", (OPTIONAL)
+ *          "lastName": "LastName"
+ *      },
+ *      "address": {
+ *          "streetNumber": 12,
+ *          "streetName": "Mariott Way",
+ *          "aptNumber": 12 (OPTIONAL),
+ *          "city": "New York",
+ *          "state": "New York",
+ *          "postalCode": "00000"
+ *      }
+ *  }
+ */
 router.post("/employee", async(req, res)=> {
     try {
         const employee = req.body;
@@ -25,8 +50,9 @@ router.post("/employee", async(req, res)=> {
         console.log("Adding Employee: "+JSON.stringify(employee)+" to database.");
 
         const newEmployee = await pool.query(
-            "INSERT INTO Employee (EmployeeID, SIN, HotelID, CompanyName, FirstName, MiddleName, LastName, StreetNumber, StreetName, AptNumber, City, State, PostalCode) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *", [employee.employeeid, 
-                employee.sin, employee.hotelid, employee.companyName, name.firstName, name.middleName, name.lastName, address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
+            "INSERT INTO Employee (EmployeeID, SIN, HotelID, CompanyName, FirstName, MiddleName, LastName, StreetNumber, StreetName, AptNumber, City, State, PostalCode) \
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *", 
+            [employee.employeeID, employee.SIN, employee.hotelID, employee.companyName, name.firstName, name.middleName, name.lastName, address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
         );
 
         res.json(newEmployee.rows);
@@ -36,6 +62,7 @@ router.post("/employee", async(req, res)=> {
     }
 });
 
+// Get all employees
 router.get("/employee", async(req, res)=>{
     try {
         console.debug("Retriving all Employee from database.");
@@ -48,14 +75,28 @@ router.get("/employee", async(req, res)=>{
     }
 });
 
-router.get("/employee/:EmployeeID", async(req, res)=>{
+/**
+ * Get a specific employee
+ * 
+ * Endpoint: /api/employee/specific
+ * Request Type: GET
+ * Request Body:
+ *  {
+ *      "employeeID": 1,
+ *      "hotelID": 1,
+ *      "companyName": "Mariott"
+ *  }
+ */
+router.get("/employee", async(req, res)=>{
 
     try {
-        const employeeid = req.params.EmployeeID;
-        console.debug("Retriving Employee with Employee ID:"+ employeeid +" from database.")
+        const requestBody = req.body;
 
-        const employee = await pool.query("SELECT * FROM Employee WHERE EmployeeID = $1", [employeeid])
-        res.json(employee.rows[0]);
+        const employee = await pool.query("SELECT * FROM Employee WHERE (EmployeeID = $1 AND HotelID = $2 AND CompanyName = $3)", 
+            [requestBody.employeeID, requestBody.hotelID, requestBody.companyName]);
+
+        console.debug("Retrieving employee: "+JSON.stringify(requestBody));
+        res.json(employee.rows);
 
     } catch (err) {
         console.error(err.message);
@@ -63,15 +104,37 @@ router.get("/employee/:EmployeeID", async(req, res)=>{
     
 });
 
-router.put("/employee/firstname/:EmployeeID", async(req, res)=>{
+/**
+ * Update employee name
+ * 
+ * Endpoint: /api/employee/name
+ * Request Type: PUT
+ * Request Body:
+ *  {
+ *      "employeeID": 1,
+ *      "hotelID": 1,
+ *      "companyName": "Mariott",
+ *      "address": {
+ *          "streetNumber": 12,
+ *          "streetName": "Mariott Way",
+ *          "aptNumber": 12 (OPTIONAL),
+ *          "city": "New York",
+ *          "state": "New York",
+ *          "postalCode": "00000"
+ *      }
+ *  }
+ */
+router.put("/employee/name", async(req, res)=>{
 
     try {
-        const EmployeeID = req.params.EmployeeID;
-        const firstname = req.body.firstname;
-        console.debug("Updating Employee firstname of Employe with new firstname:"+EmployeeID+" to "+firstname+".");
+        const requestBody = req.body;
+        const address =  req.body.address;
 
-        const updateEmployeeName = await pool.query("UPDATE Employee SET firstname = $1 WHERE EmployeeID = $2 RETURNING *", [firstname, EmployeeID]);
-        res.json(updateEmployeeName.rows);
+        const updateEmployee = await pool.query("UPDATE Employee \
+            SET StreetNumber = $1, StreetName = $2, AptNumber = $3, City = $4, State = $5, PostalCode = $6\
+            WHERE (EmployeeID = $7 AND HotelID = $8 AND CompanyName = $9)",
+            [address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalcode,
+            requestBody.employeeID, requestBody.hotelID, requestBody.companyName]);
 
     } catch (err) {
         console.error(err.message);
