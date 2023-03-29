@@ -1,11 +1,12 @@
 import './App.css';
+import Main from "./Main";
 import React, { Fragment, useState } from 'react';
 
 //components
-import InputRoom from './components/roomComponents/InputRoom';
-import ListRooms from "./components/roomComponents/ListRooms";
-import InputHotel from './components/hotelComponents/InputHotel';
-import ListHotels from './components/hotelComponents/ListHotels';
+import InputRoom from './components/CustomerView/roomBookingComponents/InputRoom';
+import ListRooms from "./components/CustomerView/roomBookingComponents/ListRooms";
+import InputHotel from './components/EmployeeView/hotelComponents/InputHotel';
+import ListHotels from './components/EmployeeView/hotelComponents/ListHotels';
 
 function App() {
   const [showRoomInput, setShowRoomInput] = useState(false);
@@ -37,31 +38,21 @@ function App() {
   }
 
   return (
-    <Fragment>
-      <div className="header">
-      <button onClick={handleHomeClick}>Home</button>
-        <button onClick={handleRoomClick}>Rooms</button>
-        <button onClick={handleHotelClick}>Hotels</button>
-      </div>
-
-      <div className="container">
-        <div className="text">
-          <p>Welcome to eHotel System</p>
-        </div>
-        {showRoomInput && showRoomList && (
-          <Fragment>
-            <InputRoom />
-            <ListRooms />
-          </Fragment>
-        )}
-        {showHotelInput && showHotelList && (
-          <Fragment>
-            <InputHotel />
-            <ListHotels />
-          </Fragment>
-        )}
-      </div> 
-    </Fragment>
+    <div className="container">
+      <Main />
+      {showRoomInput && showRoomList && (
+        <Fragment>
+          <InputRoom />
+          <ListRooms />
+        </Fragment>
+      )}
+      {showHotelInput && showHotelList && (
+        <Fragment>
+          <InputHotel />
+          <ListHotels />
+        </Fragment>
+      )}
+    </div> 
   );
 }
 
