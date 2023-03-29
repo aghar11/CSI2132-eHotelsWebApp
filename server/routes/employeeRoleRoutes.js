@@ -85,5 +85,74 @@ router.delete("/employeeRole/:employeeid", async(req, res)=>{
 });
 
 
+//manages
+router.post("/manages", async(req, res)=> {
+    try {
+        const manages = req.body;
+        
+        console.log("Adding Manages: "+JSON.stringify(manages)+" to database.");
+
+        const newManage = await pool.query(
+            "INSERT INTO Manages (EmployeeID, HotelID, CompanyName) VALUES ($1, $2, $3) RETURNING *", [manages.employeeid, 
+                manages.hotelid, manages.companyname]
+        );
+
+        res.json(newManage.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.get("/manages", async(req, res)=>{
+    try {
+        console.debug("Retriving all Manages from database.");
+
+        const allEmployee = await pool.query("Select * from manages");
+        res.json(allEmployee.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.get("/manages/:EmployeeID", async(req, res)=>{
+    try {
+        const employeeid = req.params.EmployeeID;
+        console.debug("Retriving Manages From EmployeeID: "+employeeid+" from database.");
+
+        const allEmployee = await pool.query("Select * from manages WHERE EmployeeID = $1", [employeeid]);
+        res.json(allEmployee.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.get("/manages/:EmployeeID", async(req, res)=>{
+    try {
+        const EmployeeID = req.params.EmployeeID;
+        console.debug("Retriving Manages From EmployeeID: "+EmployeeID+" from database.");
+
+        const allEmployee = await pool.query("Select * from manages WHERE EmployeeID = $1", [employeeid]);
+        res.json(allEmployee.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.delete("/manages/:EmployeeID", async(req, res)=>{
+    try {
+        const {EmployeeID} = req.params;
+        console.debug("Deleting manages with ID:"+EmployeeID+".")
+
+        const deleteManages = await pool.query("DELETE FROM manages WHERE EmployeeID = $1", [EmployeeID]);
+        res.json("Manage was deleted!");
+
+    } catch (err) {
+        console.error(err.message);
+    }
+});
 
 module.exports = router;
