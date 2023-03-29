@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS Booking (
 	RoomNumber Integer,
 	CustomerID Integer,
 	CompanyName Varchar(225),
+	Status Varchar(20,)
 	FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
 	FOREIGN KEY (RoomNumber, HotelID, CompanyName) REFERENCES Room(RoomNumber, HotelID, CompanyName),
 	PRIMARY KEY (CheckInDate, CheckOutDate, RoomNumber, HotelID, CompanyName, CustomerID)
