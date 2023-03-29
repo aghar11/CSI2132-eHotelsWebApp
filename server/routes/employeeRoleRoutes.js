@@ -33,7 +33,7 @@ router.post("/employeeRole", async(req, res)=> {
 
 router.get("/employeeRole", async(req, res)=>{
     try {
-        console.debug("Retriving all Employee Role from database.");
+        console.debug("Retriving all Employee Roles from database.");
 
         const allEmployee = await pool.query("Select * from employeerole");
         res.json(allEmployee.rows);
@@ -42,14 +42,19 @@ router.get("/employeeRole", async(req, res)=>{
         console.error(err.message);
     }
 });
-router.get("/employeeRole/:EmployeeID", async(req, res)=>{
+
+//get role from all PKs
+router.get("/employeeRole/specific", async(req, res)=>{
 
     try {
-        const employeeid = req.params.EmployeeID;
-        console.debug("Retriving Employee with Employee ID:"+ employeeid +" from database.")
+        const employeeid = req.body.employeeid;
+        const role = req.body.role;
+        const hotelid = req.body.hotelid;
+        const companyname = req.body.companyname;
+        console.debug("Retriving Employee role with Employee ID: "+ employeeid +" from database.")
 
-        const employee = await pool.query("SELECT * FROM employeerole WHERE EmployeeID = $1", [employeeid])
-        res.json(employee.rows[0]);
+        const employee = await pool.query("SELECT * FROM employeerole WHERE EmployeeID = $1 AND role = $2 AND hotelid = $3 AND companyname = $4", [employeeid, role, hotelid, companyname])
+        res.json(employee.rows);
 
     } catch (err) {
         console.error(err.message);
@@ -57,26 +62,46 @@ router.get("/employeeRole/:EmployeeID", async(req, res)=>{
     
 });
 
-router.put("/employeeRole/role/:EmployeeID", async(req, res)=>{
+//get role(s) from employeeid
+router.get("/employeeRole/employeeid", async(req, res)=>{
+
     try {
-        const EmployeeID = req.params.EmployeeID;
-        const role = req.body.role;
-        console.debug("Updating Employee Role of Employee with new Role:"+EmployeeID+" to "+role+".");
-
-        const updateEmployeeName = await pool.query("UPDATE employeerole SET Role = $1 WHERE EmployeeID = $2 RETURNING *", [role, EmployeeID]);
-        res.json(updateEmployeeName.rows);
-
+        const employeeid = req.body.employeeid;
+        console.debug("Retriving Employee role with Employee ID: "+ employeeid +" from database.")
+        const employee = await pool.query("SELECT * FROM employeerole WHERE EmployeeID = $1", [employeeid])
+        res.json(employee.rows);
     } catch (err) {
         console.error(err.message);
     }
+    
 });
-router.delete("/employeeRole/:employeeid", async(req, res)=>{
+
+//get role(s) from employeeid,hotelid,companyname
+router.get("/employeeRole/idandcompanyname", async(req, res)=>{
 
     try {
-        const {EmployeeID} = req.params;
-        console.debug("Deleting Employee with ID:"+EmployeeID+".")
+        const employeeid = req.body.employeeid;
+        const hotelid = req.body.hotelid;
+        const companyname = req.body.companyname;
+        console.debug("Retriving Employee role with Employee ID: "+ employeeid +" from database.")
+        const employee = await pool.query("SELECT * FROM employeerole WHERE EmployeeID = $1 AND hotelid = $2 AND companyname = $3", [employeeid, hotelid, companyname])
+        res.json(employee.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
 
-        const deleteEmployeeRole = await pool.query("DELETE FROM employeerole WHERE EmployeeID = $1", [EmployeeID]);
+
+router.delete("/employeeRole", async(req, res)=>{
+
+    try {
+        const employeeid = req.body.employeeid;
+        const role = req.body.role;
+        const hotelid = req.body.hotelid;
+        const companyname = req.body.companyname;
+        console.debug("Deleting Employee with ID: "+employeeid+".")
+        const deleteEmployeeRole = await pool.query("DELETE FROM employeerole WHERE EmployeeID = $1 AND role = $2 AND hotelid = $3 AND companyname = $4", [employeeid, role, hotelid, companyname]);
         res.json("Employee was deleted!");
 
     } catch (err) {
@@ -94,7 +119,7 @@ router.post("/manages", async(req, res)=> {
 
         const newManage = await pool.query(
             "INSERT INTO Manages (EmployeeID, HotelID, CompanyName) VALUES ($1, $2, $3) RETURNING *", [manages.employeeid, 
-                manages.hotelid, manages.companyname]
+                manages.hotelid, manages.companyName]
         );
 
         res.json(newManage.rows);
@@ -116,12 +141,14 @@ router.get("/manages", async(req, res)=>{
     }
 });
 
-router.get("/manages/:EmployeeID", async(req, res)=>{
+router.get("/manages/specific", async(req, res)=>{
     try {
-        const employeeid = req.params.EmployeeID;
+        const employeeid = req.body.employeeid;
+        const companyname = req.body.companyname;
+        const hotelid = req.body.hotelid;
         console.debug("Retriving Manages From EmployeeID: "+employeeid+" from database.");
 
-        const allEmployee = await pool.query("Select * from manages WHERE EmployeeID = $1", [employeeid]);
+        const allEmployee = await pool.query("Select * from manages WHERE EmployeeID = $1 AND companyname = $2 AND hotelid = $3", [employeeid, companyname, hotelid]);
         res.json(allEmployee.rows);
 
     } catch (err) {
@@ -129,25 +156,15 @@ router.get("/manages/:EmployeeID", async(req, res)=>{
     }
 });
 
-router.get("/manages/:EmployeeID", async(req, res)=>{
+
+router.delete("/manages", async(req, res)=>{
     try {
-        const EmployeeID = req.params.EmployeeID;
-        console.debug("Retriving Manages From EmployeeID: "+EmployeeID+" from database.");
+        const EmployeeID = req.body.employeeid;
+        const companyname = req.body.companyname;
+        const hotelid = req.body.hotelid;
+        console.debug("Deleting manages with ID: "+EmployeeID+".")
 
-        const allEmployee = await pool.query("Select * from manages WHERE EmployeeID = $1", [employeeid]);
-        res.json(allEmployee.rows);
-
-    } catch (err) {
-        console.error(err.message);
-    }
-});
-
-router.delete("/manages/:EmployeeID", async(req, res)=>{
-    try {
-        const {EmployeeID} = req.params;
-        console.debug("Deleting manages with ID:"+EmployeeID+".")
-
-        const deleteManages = await pool.query("DELETE FROM manages WHERE EmployeeID = $1", [EmployeeID]);
+        const deleteManages = await pool.query("DELETE FROM manages WHERE EmployeeID = $1 AND companyname = $2 AND hotelid = $3", [EmployeeID, companyname, hotelid]);
         res.json("Manage was deleted!");
 
     } catch (err) {
