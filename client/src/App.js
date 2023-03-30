@@ -6,7 +6,7 @@ import React, { Fragment, useState } from 'react';
 import InputRoom from './components/CustomerView/roomBookingComponents/InputRoom';
 import ListRooms from "./components/CustomerView/roomBookingComponents/ListRooms";
 import InputHotel from './components/EmployeeView/hotelComponents/InputHotel';
-import ListHotels from './components/EmployeeView/hotelComponents/ListHotels';
+import EmployeeView from './components/EmployeeView/hotelComponents/EmployeeView';
 
 function App() {
   const [showRoomInput, setShowRoomInput] = useState(false);
@@ -49,7 +49,7 @@ function App() {
       {showHotelInput && showHotelList && (
         <Fragment>
           <InputHotel />
-          <ListHotels />
+          <EmployeeView />
         </Fragment>
       )}
     </div> 

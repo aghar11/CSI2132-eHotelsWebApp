@@ -1,5 +1,6 @@
 import React, {Fragment, useEffect, useState} from "react"
 import EditHotel from "./EditHotel";
+import { Link } from 'react-router-dom'
 
 const ListHotels = () => {
     
@@ -32,31 +33,25 @@ const ListHotels = () => {
 
 
     return (
-        <><Fragment>
-            <h1 className= "mt-5 text-centre">List of Hotels </h1>
-            <table className="table mt-5 text-centre">
+        <Fragment>
+            <h2 className="mt-5 text-centre">List of Hotels</h2>
+            <button className="btn btn-success">Add</button>
+            <table className="table mt-2 text-centre">
                 <thead>
                     <tr>
                         <th>Hotel ID</th>
                         <th>Company Name</th>
-                        <th>Address</th>
+                        <th>City</th>
                         <th>Category</th>
                         <th>Number Of Rooms</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {/*<tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@example.com</td>
-                        <td>john@example.com</td>
-                        <td>john@example.com</td>
-                    </tr> */}
                     {hotels.map(hotel => (
                         <tr key = {hotel.hotelid}>
                             <td>{hotel.hotelid}</td>
                             <td>{hotel.companyname}</td>
-                            <td>{hotel.address}</td>
+                            <td>{hotel.city}</td>
                             <td>{hotel.category}</td>
                             <td>{hotel.numberofrooms}</td>
                             <td>
@@ -69,7 +64,7 @@ const ListHotels = () => {
                     ))}
                 </tbody>
             </table>
-        </Fragment></>
+        </Fragment>
     );
 };
 
