@@ -177,6 +177,6 @@ GROUP BY City;
 
 -- View 2: Total capacity of rooms at a hotel
 CREATE VIEW total_capacity_by_hotel AS
-SELECT SUM(Capacity) AS TotalCapacity, CompanyName, City 
+SELECT SUM(Capacity) AS TotalCapacity, CompanyName, City, HotelID
 FROM (Room NATURAL JOIN Hotel) AS Room_Hotel
-GROUP BY (CompanyName, City);
+GROUP BY (CompanyName, City, HotelID);
