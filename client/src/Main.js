@@ -1,11 +1,10 @@
 import './App.css';
 import { Routes , Route } from 'react-router-dom';
 import Home from './Home';
-import EmployeeView from './components/EmployeeView/hotelComponents/EmployeeView';
+import EmployeeView from './components/EmployeeView/EmployeeView';
 import CustomerDashboard from './components/CustomerView/CustomerDashboard';
 import RoomsByAreaView from './components/CustomerView/RoomsByAreaView';
 import HotelCapacityView from './components/CustomerView/HotelCapacityView';
-import ListRooms from './components/CustomerView/roomBookingComponents/ListRooms';
 
 
 function Main() {
