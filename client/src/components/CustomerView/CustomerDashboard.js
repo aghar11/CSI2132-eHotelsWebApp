@@ -50,6 +50,40 @@ function CustomerDashboard() {
         }
     }
 
+    const [selectedRoom, setSelectedRoom] = useState([]);
+    const [roomAmenities, setRoomAmenities] = useState([]);
+
+    const getRoomAmenities = async (room) => {
+        try {
+            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelID, "companyName": room.companyname}
+            console.log(body);
+            const response = await fetch(`http://localhost:5000/api/room/amenity/${room.roomnumber}/${room.hotelID}/${room.companyname}`);
+            const jsonData = await response.json()
+            setRoomAmenities(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const [roomIssues, setRoomIssues] = useState([])
+
+    const getRoomIssues = async (room) => {
+        try {
+            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelid, "companyName": room.companyname}
+            console.log(JSON.stringify(body));
+            const response = await fetch(`http://localhost:5000/api/room/issue/${room.roomnumber}/${room.hotelID}/${room.companyname}`);
+            const jsonData = await response.json();
+            setRoomIssues(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const getRoomInfo = async (room) => {
+        setSelectedRoom(room);
+        getRoomAmenities(room);
+        getRoomIssues(room);
+    }
 
     return(
         <div class='container-fluid'>
@@ -93,7 +127,6 @@ function CustomerDashboard() {
                         </tr>
                     </thead>
                     <tbody className="table-hover">
-                        {}
                         {rooms.map(room => (
                             <tr key = {room.roomnumber}>
                                 <td>{room.roomnumber}</td>
@@ -104,7 +137,7 @@ function CustomerDashboard() {
                                 <td>{room.viewtype}</td>
                                 <td>{room.expandable}</td>
                                 <td>
-                                    <RoomInfoModal room = {room}/>
+                                    <button id="roomInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Room Info</button>
                                 </td>
                                 <td>
                                     <RoomBookingModal />
@@ -113,6 +146,66 @@ function CustomerDashboard() {
                         ))}
                     </tbody>
                 </table>
+
+
+                <div class="modal" id="roomInfoModal" tabindex='-1' role='dialog' aria-labelledby='roomInfoModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Room Info</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Room Number: {selectedRoom.roomnumber}<br/>
+                                    Comapny Name: {selectedRoom.companyname}<br/>
+                                    View Type: {selectedRoom.viewtype}<br/>
+                                    Price : ${selectedRoom.price}<br/>
+                                    Capacity: {selectedRoom.capacity}<br/>
+                                    Expandable: {selectedRoom.expandable}<br/>
+                                </p>
+                                <div className='table'>
+                                    <table className="table mt-3 text-left">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Amenities</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {roomAmenities.map(room => (
+                                        <tr key = {room.roomnumber}>
+                                            <td>{room.roomamenity}</td>
+                                        </tr>
+                                        ))}
+                                    </tbody>
+                                    </table>
+                                </div>
+                                <div className='table'>
+                                    <table className="table mt-3 text-left">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Issues</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {roomIssues.map(room => (
+                                        <tr key = {room.roomnumber}>
+                                            <td>{room.roomissue}</td>
+                                        </tr>
+                                        ))}
+                                    </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
