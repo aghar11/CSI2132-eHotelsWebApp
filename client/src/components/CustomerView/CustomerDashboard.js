@@ -31,20 +31,17 @@ function CustomerDashboard() {
     const [totalNumberOfRooms, setTotalNumberOfRooms] = useState("totalNumberOfRooms");
     const [price, setPrice] = useState("price");
 
+    const [bookingCheckInDate, setBookingCheckInDate] = useState("DD/MM/YYYY");
+    const [bookingCheckOutDate, setBookingCheckOutDate] = useState("DD/MM/YYYY");
+    const [bookingRoomNumber, setBookingRoomNumber] = useState([]);
+    const [bookingHotelID, setBookingHotelID] = useState([]);
+    const [bookingCompanyName, setBookingCompanyName] = useState([]);
+    const [bookingCustomerID, setBookingCustomerID] = useState([]);
+
     const onSubmitForm = async e => {
         e.preventDefault();
         try {
-            /**
-             
-            const body = {roomNumber, companyName, hoteID, price, capacity, viewType, expandable};
-            const response = await fetch("http://localhost:5000/api/room", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            });
-            window.location = "/";
-            * 
-             */
+            
         } catch (error) {
             console.error(error.message);
         }
@@ -83,6 +80,29 @@ function CustomerDashboard() {
         setSelectedRoom(room);
         getRoomAmenities(room);
         getRoomIssues(room);
+    }
+
+    const setUpBookingForm = async (room) => {
+        setBookingRoomNumber(room.roomnumber);
+        setBookingHotelID(room.hotelid);
+        setBookingCompanyName(room.companyname);
+    }
+
+    const bookRoom = async () => {
+        try {
+            const body = {"checkInDate": bookingCheckInDate, "checkOutDate": bookingCheckOutDate, "roomNumber": bookingRoomNumber,
+                "hotelID": bookingHotelID, "companyName": bookingCompanyName, "customerID": bookingCustomerID, "status": "RESERVED"}
+            
+            const response = await fetch("http://localhost:5000/api/booking", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            })
+
+            window.location = "/";
+        } catch (err) {
+            console.error(err.message);
+        }
     }
 
     return(
@@ -140,14 +160,14 @@ function CustomerDashboard() {
                                     <button id="roomInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Room Info</button>
                                 </td>
                                 <td>
-                                    <RoomBookingModal />
+                                    <button id="roomBoookingButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#roomBookingModal" onClick={() => setUpBookingForm(room)}>Book</button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
 
-
+                
                 <div class="modal" id="roomInfoModal" tabindex='-1' role='dialog' aria-labelledby='roomInfoModalLabel' aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -202,6 +222,36 @@ function CustomerDashboard() {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="roomBookingModal" tabindex='-1' role='dialog' aria-labelledby='roomBookingModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Room Booking</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <form className = "form-group" onSubmit={bookRoom}>
+                                <h6 className='mt-2'>CheckIn Date</h6>
+                                <input type= "text" className="form-control" value = {bookingCheckInDate} onChange={e => setBookingCheckInDate(e.target.value)}></input>
+                                <h6 className='mt-2'>CheckOut Date</h6>
+                                <input type= "text" className="form-control" value = {bookingCheckOutDate} onChange={e => setBookingCheckOutDate(e.target.value)}></input>
+                                <h6 className='mt-2'>Room Number</h6>
+                                <input type= "text" className="form-control" value = {bookingRoomNumber}></input>
+                                <h6 className='mt-2'>Hotel ID</h6>
+                                <input type= "text" className="form-control" value = {bookingHotelID}></input>
+                                <h6 className='mt-2'>Company Name</h6>
+                                <input type= "text" className="form-control" value = {bookingCompanyName}></input>
+                                <h6 className='my-2'>Customer ID</h6>
+                                <input type= "text" className="form-control" calue = {bookingCustomerID} onChange={e => setBookingCustomerID(e.target.value)}></input>
+                                <button className= "btn btn-success mt-4">Book Room</button>
+                            </form>
                             </div>
                         </div>
                     </div>
