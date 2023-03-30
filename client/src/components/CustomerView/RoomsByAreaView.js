@@ -23,7 +23,7 @@ function RoomsByAreaView() {
     return(
         <div classname='container-fluid'>
             <h1 className= "mt-5 center">Customer Dashboard</h1>
-            <div className = 'text-left mb-1'>
+            <div className = 'text-left mt-4'>
                 <Link to='/customerView'>
                     <button id="customerViewyButton" type="button" class="btn btn-primary mr-1">Main Customer View</button>
                 </Link>
