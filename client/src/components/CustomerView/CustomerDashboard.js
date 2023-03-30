@@ -1,6 +1,7 @@
 import '../../App.css';
 import React, { useEffect, useState} from "react";
 import FilterModal from './FilterModal';
+import { Link } from 'react-router-dom';
 
 function CustomerDashboard() {
     const [room, setRoom] = useState([]);
@@ -22,6 +23,17 @@ function CustomerDashboard() {
     return(
         <div className='container-fluid'>
             <h1 className= "mt-5 center">Customer Dashboard</h1>
+            <div className = 'text-right mb-1'>
+                <Link to='/'>
+                    <button id="customerViewByAreaButton" type="button" class="btn btn-primary mr-1">Rooms By Area View</button>
+                </Link>
+                <Link to='/'>
+                    <button id="customerViewHotelCapacityButton" type="button" class="btn btn-primary mr-1">Hotel Capacity View</button>
+                </Link>
+                <Link to='/'>
+                    <button id="customerViewHomeButton" type="button" class="btn btn-primary">Return Home</button>
+                </Link>
+            </div> 
             <FilterModal/>
             <div className="table-responsive">
                 <table className="table mt-3 text-centre table-hover">
@@ -47,7 +59,7 @@ function CustomerDashboard() {
                                 <td>{room.hotelid}</td>
                                 <td>{room.price}</td>
                                 <td>{room.capacity}</td>
-                                <td>{room.viewType}</td>
+                                <td>{room.viewtype}</td>
                                 <td>{room.expandable}</td>
                                 <td>
                                     <button className="btn btn-outline-primary">View Info</button>
