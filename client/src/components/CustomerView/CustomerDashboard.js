@@ -19,15 +19,10 @@ function CustomerDashboard() {
         getRooms();
     }, []);
 
-    const [modal, setModal] = useState(false);
-    const Toggle = () => setModal(!modal);
-
     return(
         <div className='container-fluid'>
             <h1 className= "mt-5 center">Customer Dashboard</h1>
-            <div className = 'text-right'>
-                    <button id="customerViewFilterButton" type="button" class="btn btn-primary" onClick={() => Toggle()}>Filter</button>
-            </div>
+            <FilterModal/>
             <div className="table-responsive">
                 <table className="table mt-3 text-centre table-hover">
                     <thead class="table-light">
@@ -65,7 +60,6 @@ function CustomerDashboard() {
                     </tbody>
                 </table>
             </div>
-            <FilterModal show={modal} />
         </div>
     )
 }
