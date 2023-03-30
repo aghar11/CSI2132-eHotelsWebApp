@@ -1,5 +1,4 @@
 import React, {Fragment, useEffect, useState} from "react"
-import EditHotel from "./EditHotel";
 import { Link } from 'react-router-dom'
 import Container from "./Container";
 
@@ -32,6 +31,8 @@ const ListHotels = () => {
     const [state , setstate] = useState("State")
     const [postalcode , setpostalcode] = useState("Postal code")
     const [numberOfRooms , setnumberOfRooms] = useState("Number of rooms")
+    const [editCategory, setEditCategory] = useState("");
+
 
     const addHotel = async (e) => {
         try {
@@ -41,13 +42,12 @@ const ListHotels = () => {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
+            e.preventDefault();
         } catch (error) {
             console.error(error.message);
         };
     };
-
     
-
     const deleteHotel = async (hotelID, companyName) => {
         try {
             sethotelID(parseInt(hotelID));
@@ -79,41 +79,139 @@ const ListHotels = () => {
         getHotels();
     }, []);
 
+    const updateHotelCategory = async(hotelID, companyName, Category) => {
+
+        try {
+            sethotelID(parseInt(hotelID));
+            setcompanyName(companyName);
+            setEditCategory(Category);
+            const body = {hotelID: hotelID, companyName: companyName, category: Category};
+            const response = await fetch(`http://localhost:5000/api/hotel/category/`, {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            getHotels();
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
     return (
         <Fragment>
-            <h2 className="mt-5 text-centre">List of Hotels</h2>
-            <Container triggerText={triggerText} onSubmit={onSubmit} />
-            <table className="table mt-2 text-centre">
-                <thead>
-                    <tr>
-                        <th>Hotel ID</th>
-                        <th>Company Name</th>
-                        <th>City</th>
-                        <th>Category</th>
-                        <th>Number Of Rooms</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {hotels.map(hotel => (
-                        <tr key = {hotel.hotelid}>
-                            <td>{hotel.hotelid}</td>
-                            <td>{hotel.companyname}</td>
-                            <td>{hotel.city}</td>
-                            <td>{hotel.category}</td>
-                            <td>{hotel.numberofrooms}</td>
-                            <td>
-                                <EditHotel hotel = {hotel}/>
-                            </td>
-                            <td>
-                                <button className="btn btn-danger" onClick={() => deleteHotel(hotel.hotelid, hotel.companyname)}>Delete</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+          <h2 className="mt-5 text-centre">List of Hotels</h2>
+          <Container triggerText={triggerText} onSubmit={onSubmit} />
+          <table className="table mt-2 text-centre">
+            <thead>
+              <tr>
+                <th>Hotel ID</th>
+                <th>Company Name</th>
+                <th>City</th>
+                <th>Category</th>
+                <th>Number Of Rooms</th>
+              </tr>
+            </thead>
+            <tbody>
+              {hotels.map((hotel) => (
+                <tr key={hotel.hotelid}>
+                  <td>{hotel.hotelid}</td>
+                  <td>{hotel.companyname}</td>
+                  <td>{hotel.city}</td>
+                  <td>{hotel.category}</td>
+                  <td>{hotel.numberofrooms}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="btn btn-warning"
+                      data-toggle="modal"
+                      data-target={`#id${hotel.hotelid}`}
+                    >
+                      Edit
+                    </button>
+      
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => deleteHotel(hotel.hotelid, hotel.companyname)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+      
+        {/* Edit Hotel Category Modal */}
+        {hotels.map((hotel) => (
+        <div
+            key={hotel.hotelid}
+            className="modal fade"
+            id={`id${hotel.hotelid}`}
+            tabIndex="-1"
+            role="dialog"
+            aria-labelledby={`id${hotel.hotelid}`}
+            aria-hidden="true"
+        >
+            <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+                <div className="modal-header">
+                <h5 className="modal-title" id={`id${hotel.hotelid}`}>
+                    Edit Hotel Category
+                </h5>
+                <button
+                    type="button"
+                    className="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div className="modal-body">
+                <form>
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.hotelid}`}>Category</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.hotelid}`}
+                        placeholder="Enter new category"
+                        value={editCategory}
+                        onChange={(e) => setEditCategory(e.target.value)}
+                    />
+                    </div>
+                </form>
+                </div>
+                <div className="modal-footer">
+                <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                    updateHotelCategory(
+                        hotel.hotelid,
+                        hotel.companyname,
+                        editCategory
+                    );
+                    setEditCategory(editCategory);
+                    }}
+                    data-dismiss="modal"
+                >
+                    Save changes
+                </button>
+                </div>
+            </div>
+            </div>
+        </div>
+        ))}
         </Fragment>
-    );
+      );
 };
 
 export default ListHotels;
