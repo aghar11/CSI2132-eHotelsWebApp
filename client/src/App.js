@@ -5,7 +5,7 @@ import React, { Fragment, useState } from 'react';
 //components
 import InputRoom from './components/CustomerView/roomBookingComponents/InputRoom';
 import ListRooms from "./components/CustomerView/roomBookingComponents/ListRooms";
-import InputHotel from './components/EmployeeView/hotelComponents/InputHotel';
+
 import EmployeeView from './components/EmployeeView/EmployeeView';
 
 function App() {
@@ -48,7 +48,6 @@ function App() {
       )}
       {showHotelInput && showHotelList && (
         <Fragment>
-          <InputHotel />
           <EmployeeView />
         </Fragment>
       )}

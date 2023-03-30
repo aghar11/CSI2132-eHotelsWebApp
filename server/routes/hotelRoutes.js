@@ -42,12 +42,9 @@ router.post("/hotel", async(req, res)=> {
         console.debug("Adding Hotel: "+JSON.stringify(hotel)+" to database.");
 
         const newHotel = await pool.query(
-            "INSERT INTO Hotel (HotelID, CompanyName, Category, NumberOfRooms, StreetNumber, StreetName, AptNumber, City, State, PostalCode) \
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *", 
-            [hotel.hotelID, hotel.companyName, hotel.category, hotel.numberOfRooms, 
-                hotel.streetNumber, hotel.streetName, hotel.aptNumber, hotel.city, hotel.state, hotel.postalCode]
+            "INSERT INTO Hotel (hotelid, companyname, category, numberofrooms, streetnumber, streetname, aptnumber, city, state, postalcode) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *", 
+            [hotel.hotelid, hotel.companyname, hotel.category, hotel.numberOfRooms, hotel.streetnumber, hotel.streetname, hotel.aptnumber, hotel.city, hotel.state, hotel.postalcode]
         );
-
         res.json(newHotel.rows);
 
     } catch (err) {
@@ -148,10 +145,8 @@ router.delete("/hotel", async(req, res)=>{
     try {
         const requestBody = req.body;
         console.debug("Deleting Hotel: "+JSON.stringify(requestBody));
-
-        const deleteHotel = await pool.query("DELETE FROM Hotel WHERE (HotelID = $1 AND CompanyName = $2)", [requestBody.hotelID, requestBody.companyName]);
+        const deleteHotel = await pool.query("DELETE FROM Hotel WHERE (HotelID = $1 AND CompanyName = $2)", [requestBody.hotelid, requestBody.companyname]);
         res.json("Hotel was deleted!");
-
     } catch (err) {
         console.error(err.message);
     }

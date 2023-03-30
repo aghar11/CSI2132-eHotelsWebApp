@@ -8,21 +8,23 @@ const ListHotels = () => {
     const triggerText = 'Add Hotel';
     const onSubmit = (event) => {
         event.preventDefault(event);
-        sethotelID(event.target.hotelid.value);
+        sethotelID(parseInt(event.target.hotelid.value));
         setcategory(event.target.category.value);
-        setcompanyName(event.target.companyName.value);
-        setstreetnumber(event.target.streetnumber.value);
+        setcompanyName(event.target.companyname.value);
+        setstreetnumber(parseInt(event.target.streetnumber.value));
         setstreetname(event.target.streetname.value);
-        setaptnumber(event.target.aptnumber.value);
+        setaptnumber(parseInt(event.target.aptnumber.value));
         setcity(event.target.city.value);
         setstate(event.target.state.value);
         setpostalcode(event.target.postalcode.value);
-        setnumberOfRooms(event.target.numberOfRooms.value);        
+        setnumberOfRooms(parseInt(event.target.numberofrooms.value)); 
+        addHotel();       
     };
 
-    const [hotelID , sethotelID] = useState("HotelID")
+    const [hotels, setHotels] = useState([]);
+    const [hotelid , sethotelID] = useState("HotelID")
     const [category , setcategory] = useState("Category")
-    const [companyName , setcompanyName] = useState("Company Name")
+    const [companyname , setcompanyName] = useState("Company Name")
     const [streetnumber , setstreetnumber] = useState("Street Number")
     const [streetname , setstreetname] = useState("Street Name")
     const [aptnumber , setaptnumber] = useState("Apt Number")
@@ -31,10 +33,9 @@ const ListHotels = () => {
     const [postalcode , setpostalcode] = useState("Postal code")
     const [numberOfRooms , setnumberOfRooms] = useState("Number of rooms")
 
-    const addHotel = async e => {
-        e.preventDefault();
+    const addHotel = async (e) => {
         try {
-            const body = {hotelID, companyName, category, numberOfRooms, streetnumber, streetname, aptnumber, city, state, postalcode};
+            const body = {hotelid, companyname, category, numberOfRooms, streetnumber, streetname, aptnumber, city, state, postalcode};
             const response = await fetch("http://localhost:5000/api/hotel", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -43,17 +44,23 @@ const ListHotels = () => {
             window.location = "/";
         } catch (error) {
             console.error(error.message);
-        }
-    }
+        };
+    };
 
-    const [hotels, setHotels] = useState([]);
+    
 
-    const deleteHotel = async (id) => {
+    const deleteHotel = async (hotelID, companyName) => {
         try {
-            const deleteHotel = await fetch(`http://localhost:5000/api/hotel/${id}`, {
-                method: "DELETE"
+            sethotelID(parseInt(hotelID));
+            setcompanyName(companyName);
+            const body = {hotelid, companyname};
+            const deleteHotel = await fetch("http://localhost:5000/api/hotel", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
             });
-            setHotels(hotels.filter(hotel => hotel.hotelid !== id));
+            setHotels(hotels.filter(hotel => hotel.hotelid !== hotelID));
+            getHotels();
         } catch (error) {
             console.error(error.message);
         };
@@ -66,7 +73,7 @@ const ListHotels = () => {
             setHotels(jsonData);
         } catch (error) {
             console.error(error.message);
-        }
+        };
     };
 
     useEffect(() => {
@@ -100,7 +107,7 @@ const ListHotels = () => {
                                 <EditHotel hotel = {hotel}/>
                             </td>
                             <td>
-                                <button className="btn btn-danger" onClick={() => deleteHotel(hotel.hotelid)}>Delete</button>
+                                <button className="btn btn-danger" onClick={() => deleteHotel(hotel.hotelid, hotel.companyname)}>Delete</button>
                             </td>
                         </tr>
                     ))}

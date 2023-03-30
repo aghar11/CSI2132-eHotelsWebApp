@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 export const Form = ({ onSubmit }) => {
 
@@ -32,6 +32,7 @@ export const Form = ({ onSubmit }) => {
             className="form-control"
             id="numberofrooms"
             placeholder="Number of Rooms"
+            type="integer"
             />
         </div>
         <div className="form-group">
@@ -40,6 +41,7 @@ export const Form = ({ onSubmit }) => {
             className="form-control"
             id="streetnumber"
             placeholder="Street Number"
+            type="integer"
             />
         </div>
         <div className="form-group">
@@ -56,6 +58,7 @@ export const Form = ({ onSubmit }) => {
             className="form-control"
             id="aptnumber"
             placeholder="Apt Number"
+            type="integer"
             />
         </div>
         <div className="form-group">
