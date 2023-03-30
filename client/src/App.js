@@ -3,8 +3,8 @@ import Main from "./Main";
 import React, { Fragment, useState } from 'react';
 
 //components
-import InputRoom from './components/CustomerView/roomBookingComponents/InputRoom';
-import ListRooms from "./components/CustomerView/roomBookingComponents/ListRooms";
+import InputRoom from './components/CustomerView/InputRoom';
+import ListRooms from "./components/CustomerView/ListRooms";
 import InputHotel from './components/EmployeeView/hotelComponents/InputHotel';
 import ListHotels from './components/EmployeeView/hotelComponents/ListHotels';
 

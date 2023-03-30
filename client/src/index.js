@@ -9,9 +9,7 @@ import Main from './Main';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-    <div className='container'>
       <Main />
-    </div>
   </BrowserRouter>
 );
 
