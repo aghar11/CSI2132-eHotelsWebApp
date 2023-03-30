@@ -1,6 +1,5 @@
 import '../../App.css';
 import React, { useEffect, useState} from "react";
-import FilterModal from './FilterModal';
 import { Link } from 'react-router-dom';
 import RoomInfoModal from './RoomInfoModal';
 import RoomBookingModal from './RoomBookingModal';
@@ -24,20 +23,19 @@ function CustomerDashboard() {
 
 
     return(
-        <div className='container-fluid'>
+        <div class='container-fluid'>
             <h1 className= "mt-5 center">Customer Dashboard</h1>
-            <div className = 'text-right mb-1'>
-                <Link to='/'>
+            <div className = 'text-left mb-1'>
+                <Link to='/roomsByArea'>
                     <button id="customerViewByAreaButton" type="button" class="btn btn-primary mr-1">Rooms By Area View</button>
                 </Link>
-                <Link to='/'>
+                <Link to='/hotelCapacity'>
                     <button id="customerViewHotelCapacityButton" type="button" class="btn btn-primary mr-1">Hotel Capacity View</button>
                 </Link>
                 <Link to='/'>
                     <button id="customerViewHomeButton" type="button" class="btn btn-primary">Return Home</button>
                 </Link>
             </div> 
-            <FilterModal/>
             <div className="table-responsive">
                 <table className="table mt-3 text-centre table-hover">
                     <thead class="table-light">
