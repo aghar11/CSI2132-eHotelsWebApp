@@ -39,14 +39,13 @@ const router = express.Router();
 router.post("/hotel", async(req, res)=> {
     try {
         const hotel = req.body;
-        const address = req.body.address;
         console.debug("Adding Hotel: "+JSON.stringify(hotel)+" to database.");
 
         const newHotel = await pool.query(
             "INSERT INTO Hotel (HotelID, CompanyName, Category, NumberOfRooms, StreetNumber, StreetName, AptNumber, City, State, PostalCode) \
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *", 
             [hotel.hotelID, hotel.companyName, hotel.category, hotel.numberOfRooms, 
-            address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
+                hotel.streetNumber, hotel.streetName, hotel.aptNumber, hotel.city, hotel.state, hotel.postalCode]
         );
 
         res.json(newHotel.rows);

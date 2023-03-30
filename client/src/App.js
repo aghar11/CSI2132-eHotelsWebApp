@@ -6,7 +6,7 @@ import React, { Fragment, useState } from 'react';
 import InputRoom from './components/CustomerView/roomBookingComponents/InputRoom';
 import ListRooms from "./components/CustomerView/roomBookingComponents/ListRooms";
 import InputHotel from './components/EmployeeView/hotelComponents/InputHotel';
-import EmployeeView from './components/EmployeeView/hotelComponents/EmployeeView';
+import EmployeeView from './components/EmployeeView/EmployeeView';
 
 function App() {
   const [showRoomInput, setShowRoomInput] = useState(false);

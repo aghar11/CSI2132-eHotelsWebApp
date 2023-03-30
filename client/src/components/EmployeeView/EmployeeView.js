@@ -1,10 +1,13 @@
 import React, {Fragment, useState} from "react"
 import { Link } from 'react-router-dom'
-import InputHotel from "./InputHotel";
-import ListHotels from "./ListHotels";
+import InputHotel from "./hotelComponents/InputHotel";
+import ListHotels from "./hotelComponents/ListHotels";
+
 
 const EmployeeView = () => {
     
+    
+
     const [showRooms, setShowRooms] = useState(false);
     const [showHotels, setShowHotels] = useState(false);
     const [showEmployees, setShowEmployees] = useState(false);
@@ -12,7 +15,6 @@ const EmployeeView = () => {
     const [showHeadquarters, setShowHeadquarters] = useState(false);
 
     const handleEmployeeClick = () => {
-        
         setShowRooms(false);
         setShowHotels(false);
         setShowEmployees(true);
@@ -53,7 +55,7 @@ const EmployeeView = () => {
     }
 
     return (
-        <div className="container">
+        <div className="container-fluid">
             <button id="homeButton" type="button" class="btn btn-danger"><Link to='/'>Home</Link></button>
             <h1 className= "mt-5 text-centre">Employee View </h1>
             <table>
@@ -63,31 +65,34 @@ const EmployeeView = () => {
                 <td><button id="homeButton" type="button" class="btn btn-success" onClick={() => handleHotelClick()}>Hotels</button></td>
                 <td><button id="homeButton" type="button" class="btn btn-success" onClick={() => handleRoomClick()}>Rooms</button></td>
             </table>
-            {showHotels &&(
-                <Fragment>
-                    <ListHotels/>
-                </Fragment>
-            )}
-            {showRooms &&(
-                <Fragment>
-                    <ListHotels/>
-                </Fragment>
-            )}
-            {showEmployees &&(
-                <Fragment>
-                    <ListHotels/>
-                </Fragment>
-            )}
-            {showCustomers &&(
-                <Fragment>
-                    <ListHotels/>
-                </Fragment>
-            )}
-            {showHeadquarters &&(
-                <Fragment>
-                    <ListHotels/>
-                </Fragment>
-            )}
+            <div className="container-fluid">
+                {showHotels &&(
+                    <Fragment>
+                        <ListHotels/>
+                    </Fragment>
+                )}
+                {showRooms &&(
+                    <Fragment>
+                        <ListHotels/>
+                    </Fragment>
+                )}
+                {showEmployees &&(
+                    <Fragment>
+                        <ListHotels/>
+                    </Fragment>
+                )}
+                {showCustomers &&(
+                    <Fragment>
+                        <ListHotels/>
+                    </Fragment>
+                )}
+                {showHeadquarters &&(
+                    <Fragment>
+                        <ListHotels/>
+                    </Fragment>
+                )}
+            </div>
+            
         </div>
     );
 };
