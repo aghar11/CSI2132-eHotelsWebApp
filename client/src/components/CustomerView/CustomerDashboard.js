@@ -2,15 +2,17 @@ import '../../App.css';
 import React, { useEffect, useState} from "react";
 import FilterModal from './FilterModal';
 import { Link } from 'react-router-dom';
+import RoomInfoModal from './RoomInfoModal';
+import RoomBookingModal from './RoomBookingModal';
 
 function CustomerDashboard() {
-    const [room, setRoom] = useState([]);
+    const [rooms, setRooms] = useState([]);
 
     const getRooms = async () => {
         try {
             const response = await fetch("http://localhost:5000/api/room");
             const jsonData = await response.json();
-            setRoom(jsonData);
+            setRooms(jsonData);
         } catch (error) {
             console.error(error.message);
         }
@@ -19,6 +21,7 @@ function CustomerDashboard() {
     useEffect(() => {
         getRooms();
     }, []);
+
 
     return(
         <div className='container-fluid'>
@@ -52,8 +55,8 @@ function CustomerDashboard() {
                     </thead>
                     <tbody className="table-hover">
                         {}
-                        {room.map(room => (
-                            <tr key = {room.roomNumber}>
+                        {rooms.map(room => (
+                            <tr key = {room.roomnumber}>
                                 <td>{room.roomnumber}</td>
                                 <td>{room.companyname}</td>
                                 <td>{room.hotelid}</td>
@@ -62,10 +65,10 @@ function CustomerDashboard() {
                                 <td>{room.viewtype}</td>
                                 <td>{room.expandable}</td>
                                 <td>
-                                    <button className="btn btn-outline-primary">View Info</button>
+                                    <RoomInfoModal room = {room}/>
                                 </td>
                                 <td>
-                                    <button className="btn btn-success">Book</button>
+                                    <RoomBookingModal />
                                 </td>
                             </tr>
                         ))}
