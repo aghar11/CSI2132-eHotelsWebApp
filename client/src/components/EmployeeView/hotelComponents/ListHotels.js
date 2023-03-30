@@ -35,13 +35,12 @@ const ListHotels = () => {
 
     const addHotel = async (e) => {
         try {
-            const body = {hotelid, companyname, category, numberOfRooms, streetnumber, streetname, aptnumber, city, state, postalcode};
+            const body = {hotelid,category, companyname, streetnumber, streetname, aptnumber, city, state, postalcode, numberOfRooms};
             const response = await fetch("http://localhost:5000/api/hotel", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
-            window.location = "/";
         } catch (error) {
             console.error(error.message);
         };
@@ -53,7 +52,7 @@ const ListHotels = () => {
         try {
             sethotelID(parseInt(hotelID));
             setcompanyName(companyName);
-            const body = {hotelid, companyname};
+            const body = {hotelid: hotelID, companyname: companyName};
             const deleteHotel = await fetch("http://localhost:5000/api/hotel", {
                 method: "DELETE",
                 headers: {"Content-Type": "application/json"},
