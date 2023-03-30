@@ -22,6 +22,7 @@ const employeeRoutes = require("./routes/employeeRoutes");
 const headquartersRoutes = require("./routes/headquartersRoutes");
 const hotelRoutes = require("./routes/hotelRoutes");
 const roomRoutes = require("./routes/roomRoutes");
+const SQLViewRoutes = require("./routes/SQLviewsRoutes");
 
 // Mount api routes
 app.use("/api", bookingRoutes);
@@ -31,6 +32,7 @@ app.use("/api", employeeRoutes);
 app.use("/api", headquartersRoutes);
 app.use("/api", hotelRoutes);
 app.use("/api", roomRoutes);
+app.use("/api", SQLViewRoutes);
 
 /**
  * Start backend server
