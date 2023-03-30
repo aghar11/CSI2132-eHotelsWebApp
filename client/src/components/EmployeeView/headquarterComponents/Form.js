@@ -1,9 +1,6 @@
 import React, {useState} from 'react';
 
 export const Form = ({ onSubmit }) => {
-
-    
-
     return (
         <form onSubmit={onSubmit}>
         <div className="form-group">
@@ -15,8 +12,8 @@ export const Form = ({ onSubmit }) => {
             />
         </div>
         <div className="form-group">
-            <label >Number Of Hotels</label>
-            <input className="form-control" id="numberofhotels" placeholder="Number Of Hotels" type="integer"/>
+            <label >Number Of Rooms</label>
+            <input className="form-control" id="numberOfRooms" placeholder="Number Of Rooms" type="integer"/>
         </div>
         <div className="form-group">
             <label >Street Number</label>
