@@ -1,6 +1,7 @@
 import './App.css';
 import { Link } from 'react-router-dom'
 import React, { Fragment, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Home() {
     return(
@@ -12,8 +13,12 @@ function Home() {
             </div>
 
             <div className="header" id="buttonSelection">
-                <button id="employeeViewbutton" type="button" class="btn btn-success"><Link to='/employeeView'>Employee View</Link></button>
-                <button id="customerViewbutton" type="button" class="btn btn-success"><Link to='/customerView'>Customer View</Link></button>
+                <Link to='/customerView'>
+                    <button id="customerViewButton" type="button" class="btn btn-primary mr-2">Customer View</button>
+                </Link>
+                <Link to='/employeeView'>
+                    <button id="employeeViewButton" type="button" class="btn btn-primary mr-2">Employee View</button>
+                </Link>
             </div>
         </div>
     )

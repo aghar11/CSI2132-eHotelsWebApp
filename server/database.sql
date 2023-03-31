@@ -1,5 +1,11 @@
+/*
+	SQL Script to setup database tables, indices, and views to be used in the ehotels Application
+*/
+
+-- DATABASE CREATION STATEMENT
 CREATE DATABASE postgres;
 
+-- TABLE CREATION STATEMENTS
 CREATE TABLE IF NOT EXISTS Headquarters(
 	CompanyName Varchar(225) PRIMARY KEY,
 	NumberOfHotels Integer NOT NULL,
@@ -148,3 +154,33 @@ CREATE TABLE IF NOT EXISTS EmployeeRole (
 	FOREIGN KEY (EmployeeID, HotelID, CompanyName) REFERENCES Employee(EmployeeID, HotelID, CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (Role, EmployeeID, HotelID, CompanyName)
 );
+
+-- TABLE INDEX STATEMENTS
+CREATE INDEX room_capacity_idx
+ON Room(Capacity);
+
+CREATE INDEX room_price_idx
+ON Room(Price);
+
+CREATE INDEX hotel_city_category_idx
+ON Hotel(City, Category);
+
+CREATE INDEX booking_checkInDate_roomNumber_hotelID_companyName_idx
+ON Booking(CheckInDate, RoomNumber, HotelID, CompanyName);
+
+-- VIEW CREATION STATEMENTS
+-- View 1: Avaiable rooms by area
+CREATE VIEW number_of_rooms_by_city AS
+SELECT COUNT (RoomNumber) AS NumberOfRooms, City
+FROM (Room NATURAL JOIN Hotel) AS Room_Hotel
+GROUP BY City;
+
+-- View 2: Total capacity of rooms at a hotel
+CREATE VIEW total_capacity_by_hotel AS
+SELECT SUM(Capacity) AS TotalCapacity, CompanyName, City, HotelID
+FROM (Room NATURAL JOIN Hotel) AS Room_Hotel
+GROUP BY (CompanyName, City, HotelID);
+
+-- View 3: Used in the Customer Dashboard
+CREATE VIEW room_hotel AS
+SELECT * FROM Room NATURAL JOIN Hotel;
