@@ -33,6 +33,14 @@ const ListHotels = () => {
     const [postalcode , setpostalcode] = useState("Postal code")
     const [numberOfRooms , setnumberOfRooms] = useState("Number of rooms")
     const [editCategory, setEditCategory] = useState("");
+    const [editStreetnumber, setEditStreetNumber] = useState("");
+    const [editStreetname, setEditStreetname] = useState("");
+    const [editaptnumber, setEditaptnumber] = useState("");
+    const [editcity, setEditcity] = useState("");
+    const [editstate, setEditstate] = useState("");
+    const [editpostalcode, setEditpostalcode] = useState("");
+    const [editnumberOfRooms, setEditnumberOfRooms] = useState("");
+
 
 
     const addHotel = async (e) => {
@@ -81,14 +89,26 @@ const ListHotels = () => {
         getHotels();
     }, []);
 
-    const updateHotelCategory = async(hotelID, companyName, Category) => {
+    const editHotel = async (hotel) => {
+        try {
+            setEditStreetNumber(hotel.streetnumber);
+            setEditCategory(hotel.category);
+            setEditnumberOfRooms(hotel.numberofrooms);
+            setEditaptnumber(hotel.aptnumber);
+            setEditcity(hotel.city);
+            setEditstate(hotel.state);
+            setEditpostalcode(hotel.postalcode);
+            setEditStreetname(hotel.streetname);
+        } catch (error) {
+            console.error(error.message);
+        };
+    };
+
+    const updateHotel = async(hotelID, companyName, Category, numberofrooms, streetname, streetnumber, city, state, postalcode) => {
 
         try {
-            sethotelID(parseInt(hotelID));
-            setcompanyName(companyName);
-            setEditCategory(Category);
-            const body = {hotelID: hotelID, companyName: companyName, category: Category};
-            const response = await fetch(`http://localhost:5000/api/hotel/category/`, {
+            const body = {hotelid: hotelID, companyname: companyName, category: Category, numberofrooms: numberofrooms, city: city, streetname: streetname, streetnumber: streetnumber, state: state, postalcode: postalcode};
+            const response = await fetch("http://localhost:5000/api/hotel/all", {
                 method: "PUT",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
@@ -97,6 +117,14 @@ const ListHotels = () => {
         } catch (error) {
             console.error(error.message);
         }
+    };
+
+    const saveChanges = async (hotel) => {
+        try {
+            updateHotel(hotel.hotelid, hotel.companyname, editCategory, editnumberOfRooms, editStreetname, editStreetnumber, editcity, editstate, editpostalcode);
+        } catch (error) {
+            console.error(error.message);
+        };
     };
 
     return (
@@ -127,6 +155,7 @@ const ListHotels = () => {
                       className="btn btn-warning"
                       data-toggle="modal"
                       data-target={`#id${hotel.hotelid}`}
+                      onClick={() => editHotel(hotel)}
                     >
                       Edit
                     </button>
@@ -157,58 +186,136 @@ const ListHotels = () => {
             <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
                 <div className="modal-header">
-                <h5 className="modal-title" id={`id${hotel.hotelid}`}>
-                    Edit Hotel Category
-                </h5>
-                <button
-                    type="button"
-                    className="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                >
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <h5 className="modal-title" >
+                        Edit Hotel
+                    </h5>
+                    <button
+                        type="button"
+                        className="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div className="modal-body">
                 <form>
                     <div className="form-group">
-                    <label htmlFor={`category${hotel.hotelid}`}>Category</label>
+                    <label htmlFor={`category${hotel.hotelid}`}>Number of Rooms</label>
                     <input
                         type="text"
                         className="form-control"
                         id={`category${hotel.hotelid}`}
-                        placeholder="Enter new category"
+                        placeholder="Enter Number of Rooms"
+                        value={editnumberOfRooms}
+                        onChange={(e) => setEditnumberOfRooms(e.target.value)}
+                    />
+                    </div>
+
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.category}`}>Category</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.category}`}
+                        placeholder="Enter Category"
                         value={editCategory}
                         onChange={(e) => setEditCategory(e.target.value)}
                     />
                     </div>
+
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.streetname}`}>Street Name</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.streetname}`}
+                        placeholder="Enter Street Name"
+                        value={editStreetname}
+                        onChange={(e) => setEditStreetname(e.target.value)}
+                    />
+                    </div>
+
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.streetnumber}`}>Street Number</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.streetnumber}`}
+                        placeholder="Enter Street Number"
+                        value={editStreetnumber}
+                        onChange={(e) => setEditStreetNumber(e.target.value)}
+                    />
+                    </div>
+
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.aptnumber}`}>Apt Number</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.aptnumber}`}
+                        placeholder="Enter Apt Number"
+                        value={editaptnumber}
+                        onChange={(e) => setEditaptnumber(e.target.value)}
+                    />
+                    </div>
+
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.city}`}>City</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.city}`}
+                        placeholder="Enter City"
+                        value={editcity}
+                        onChange={(e) => setEditcity(e.target.value)}
+                    />
+                    </div>
+
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.state}`}>State</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.state}`}
+                        placeholder="Enter State"
+                        value={editstate}
+                        onChange={(e) => setEditstate(e.target.value)}
+                    />
+                    </div>
+
+                    <div className="form-group">
+                    <label htmlFor={`category${hotel.postalcode}`}>Postal Code</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id={`category${hotel.postalcode}`}
+                        placeholder="Enter Postal Code"
+                        value={editpostalcode}
+                        onChange={(e) => setEditpostalcode(e.target.value)}
+                    />
+                    </div>
+
                 </form>
                 </div>
-                <div className="modal-footer">
-                <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-dismiss="modal"
-                >
-                    Close
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => {
-                    updateHotelCategory(
-                        hotel.hotelid,
-                        hotel.companyname,
-                        editCategory
-                    );
-                    setEditCategory(editCategory);
-                    }}
-                    data-dismiss="modal"
-                >
-                    Save changes
-                </button>
+                    <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => {saveChanges(hotel)}}
+                            data-dismiss="modal"
+                        >
+                            Save changes
+                        </button>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
         ))}

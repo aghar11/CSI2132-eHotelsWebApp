@@ -134,7 +134,7 @@ const ListCustomer = () => {
 
     return (
         <Fragment>
-            <h2 className="mt-5 text-centre">List of Customers</h2>
+            <h2 className="mt-5 text-centre">Customer Management</h2>
             <Container triggerText={triggerText} onSubmit={onSubmit} />
             <table className="table mt-2 text-centre">
                 <thead>
