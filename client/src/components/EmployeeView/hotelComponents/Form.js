@@ -87,7 +87,7 @@ export const Form = ({ onSubmit }) => {
         </div>
         <div className="form-group">
             <button className="form-control btn btn-primary" type="submit" >
-                Submit
+            Double Click To Confirm
             </button>
         </div>
         </form>
