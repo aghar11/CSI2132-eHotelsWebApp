@@ -129,6 +129,23 @@ router.put("/hotel/category", async(req, res)=>{
     
 });
 
+//update all
+router.put("/hotel/all", async(req, res)=>{
+
+    try {
+        const requestBody = req.body;
+        console.debug("Updating Hotel all attributes: "+JSON.stringify(requestBody));
+
+        const updateHotel = await pool.query("UPDATE hotel SET category = $1, numberofrooms = $2, streetnumber = $3, streetname = $4, aptnumber = $5, city = $6, state = $7, postalcode = $8 WHERE (hotelid = $9 AND companyname = $10) RETURNING *", 
+            [requestBody.category, requestBody.numberofrooms, requestBody.streetnumber, requestBody.streetname, requestBody.aptnumber, requestBody.city, requestBody.state, requestBody.postalcode, requestBody.hotelid, requestBody.companyname]);
+        res.json("Hotel was updated!");
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+
 /**
  * Delete hotel by primary key.
  * 

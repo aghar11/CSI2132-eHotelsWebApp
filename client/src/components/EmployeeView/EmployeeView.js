@@ -2,6 +2,7 @@ import React, {Fragment, useState} from "react"
 import { Link } from 'react-router-dom'
 import ListHotels from "./hotelComponents/ListHotels";
 import ListHeadquarter from "./headquarterComponents/ListHeadquarter"
+import ListCustomer from "./customerComponents/ListCustomer";
 import EmployeeRoomView from "./roomManagementComponents/EmployeeRoomView";
 
 const EmployeeView = () => {
@@ -85,7 +86,7 @@ const EmployeeView = () => {
                 )}
                 {showCustomers &&(
                     <Fragment>
-                        <ListHotels/>
+                        <ListCustomer/>
                     </Fragment>
                 )}
                 {showHeadquarters &&(

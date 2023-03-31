@@ -17,17 +17,12 @@ const router = express.Router();
 router.post("/customer", async(req, res) => {
     try {
         const customer = req.body;
-        const address = req.body.address;
-        const name = req.body.name;
-
-        console.debug("Adding Customer with ID: "+customer.customerID+" to database.");
-
+        console.debug("Adding Customer with ID: "+customer.customerid+" to database.");
         const newCustomer =  await pool.query(
             "INSERT INTO Customer (CustomerID, SIN, RegistrationDate, FirstName, LastName, StreetNumber, StreetName, AptNumber, City, State, PostalCode) VALUES \
             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *",
-            [customer.customerID, customer.SIN , customer.registrationdate, name.firstName, name.lastName, address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
+            [customer.customerid, customer.sin , customer.registrationdate, customer.firstname, customer.lastname, customer.streetnumber, customer.streetname, customer.aptnumber, customer.city, customer.state, customer.postalcode]
         );
-
         res.json(newCustomer.rows);
     } catch (err) {
         console.error(err.message);
@@ -83,12 +78,29 @@ router.delete("/customer", async(req, res)=>{
 
 
 // update sin from customer id
+router.put("/customer/all", async(req, res)=>{
+
+    try {
+        const body = req.body;
+
+        console.debug("Updating all attributes of Customer with customer ID: "+body.customerid+", new sin is: "+body.sin+".");
+
+        const updateCustomer = await pool.query("UPDATE customer SET sin = $1, registrationdate = $2, firstname = $3, lastname = $4, streetnumber = $5, streetname = $6, aptnumber = $7, city = $8, state = $9, postalcode = $10 WHERE customerid = $11 RETURNING *", 
+            [body.sin, body.registrationdate, body.firstname, body.lastname, body.streetnumber, body.streetname, body.aptnumber, body.city, body.state, body.postalcode, body.customerid]);
+        res.json(updateCustomer.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+
+// update sin from customer id
 router.put("/customer/sin", async(req, res)=>{
 
     try {
         const customerid = req.body.customerid;
         const sin = req.body.sin;
-        console.debug("Updating customer sin of customer with customer ID: "+customerid+" to "+sin+".");
+        console.debug("Updating Customer with customer ID: "+customerid+" to "+sin+".");
 
         const updateCustomer = await pool.query("UPDATE customer SET sin = $1 WHERE customerid = $2 RETURNING *", [sin, customerid]);
         res.json(updateCustomer.rows);
