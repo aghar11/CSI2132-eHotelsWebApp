@@ -38,7 +38,6 @@ const ListHeadquarters = () => {
 
 
     const addHeadquarter = async (e) => {
-        e.preventDefault();
         try {
             const body = {companyname: companyName, numberofhotels: numberOfHotels, streetnumber: streetNumber, streetname: streetName, aptnumber: aptNumber, city: city, state: state, postalcode: postalCode};
             const response = await fetch("http://localhost:5000/api/headquarters", {
@@ -46,6 +45,8 @@ const ListHeadquarters = () => {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
+            e.preventDefault();
+            getHeadquarters();
         } catch (error) {
             console.error(error.message);
         };
@@ -55,7 +56,9 @@ const ListHeadquarters = () => {
         try {
             const body = {companyname: companyname};
             const deleteHeadquarter = await fetch(`http://localhost:5000/api/headquarters`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
             });
             setHeadquarters(headquarters.filter(headquarter => headquarter.companyname !== companyname));
             getHeadquarters();
@@ -83,12 +86,13 @@ const ListHeadquarters = () => {
         try {
             setcompanyName(companyName);
             setEditNumberOfHotels(numberOfHotels);
-            const body = {companyName: companyName, numberOfHotels: numberOfHotels};
+            const body = {companyname: companyName, numberofhotels: numberOfHotels};
             const response = await fetch(`http://localhost:5000/api/headquarters/numberOfHotels`, {
                 method: "PUT",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
+            window.location = "/";
             getHeadquarters();
         } catch (error) {
             console.error(error.message);
@@ -105,12 +109,13 @@ const ListHeadquarters = () => {
             setEditCity(city);
             setEditState(state);
             setEditPostalCode(postalCode);
-            const body = {companyName: companyName, streetnumber: streetNumber, streetName: streetName, aptNumber: aptNumber, city: city, state: state, postalCode: postalCode};
+            const body = {companyname: companyName, streetnumber: streetNumber, streetname: streetName, aptnumber: aptNumber, city: city, state: state, postalcode: postalCode};
             const response = await fetch(`http://localhost:5000/api/headquarters/address`, {
                 method: "PUT",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
+            window.location = "/";
             getHeadquarters();
         } catch (error) {
             console.error(error.message);
@@ -174,17 +179,17 @@ const ListHeadquarters = () => {
             <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
                 <div className="modal-header">
-                <h5 className="modal-title" id={`id${headquarter.companyname}`}>
-                    Edit Headquarters
-                </h5>
-                <button
-                    type="button"
-                    className="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                >
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                    <h5 className="modal-title" id={`id${headquarter.companyname}`}>
+                        Edit Headquarters
+                    </h5>
+                    <button
+                        type="button"
+                        className="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div className="modal-body">
                 <form>
@@ -201,11 +206,11 @@ const ListHeadquarters = () => {
                     </div>
 
                     <div className="form-group">
-                    <label htmlFor={`category${headquarter.companyname}`}>Street Number</label>
+                    <label htmlFor={`category${headquarter.streetnumber}`}>Street Number</label>
                     <input
                         type="text"
                         className="form-control"
-                        id={`category${headquarter.companyname}`}
+                        id={`category${headquarter.streetnumber}`}
                         placeholder="Enter Street Number"
                         value={editStreetnumber}
                         onChange={(e) => setEditStreetNumber(e.target.value)}
@@ -213,11 +218,11 @@ const ListHeadquarters = () => {
                     </div>
 
                     <div className="form-group">
-                    <label htmlFor={`category${headquarter.companyname}`}>Street Name</label>
+                    <label htmlFor={`category${headquarter.streetname}`}>Street Name</label>
                     <input
                         type="text"
                         className="form-control"
-                        id={`category${headquarter.companyname}`}
+                        id={`category${headquarter.streetname}`}
                         placeholder="Enter Street Name"
                         value={editStreetname}
                         onChange={(e) => setEditStreetName(e.target.value)}
@@ -225,11 +230,11 @@ const ListHeadquarters = () => {
                     </div>
 
                     <div className="form-group">
-                    <label htmlFor={`category${headquarter.companyname}`}>Apt Number</label>
+                    <label htmlFor={`category${headquarter.aptnumber}`}>Apt Number</label>
                     <input
                         type="text"
                         className="form-control"
-                        id={`category${headquarter.companyname}`}
+                        id={`category${headquarter.aptnumber}`}
                         placeholder="Enter Apt Number"
                         value={editAptnumber}
                         onChange={(e) => setEditAptNumber(e.target.value)}
@@ -237,11 +242,11 @@ const ListHeadquarters = () => {
                     </div>
 
                     <div className="form-group">
-                    <label htmlFor={`category${headquarter.companyname}`}>City</label>
+                    <label htmlFor={`category${headquarter.city}`}>City</label>
                     <input
                         type="text"
                         className="form-control"
-                        id={`category${headquarter.companyname}`}
+                        id={`category${headquarter.city}`}
                         placeholder="Enter City"
                         value={editCity}
                         onChange={(e) => setEditCity(e.target.value)}
@@ -249,11 +254,11 @@ const ListHeadquarters = () => {
                     </div>
 
                     <div className="form-group">
-                    <label htmlFor={`category${headquarter.companyname}`}>State</label>
+                    <label htmlFor={`category${headquarter.state}`}>State</label>
                     <input
                         type="text"
                         className="form-control"
-                        id={`category${headquarter.companyname}`}
+                        id={`category${headquarter.state}`}
                         placeholder="Enter State"
                         value={editState}
                         onChange={(e) => setEditState(e.target.value)}
@@ -261,11 +266,11 @@ const ListHeadquarters = () => {
                     </div>
 
                     <div className="form-group">
-                    <label htmlFor={`category${headquarter.companyname}`}>Postal Code</label>
+                    <label htmlFor={`category${headquarter.postalcode}`}>Postal Code</label>
                     <input
                         type="text"
                         className="form-control"
-                        id={`category${headquarter.companyname}`}
+                        id={`category${headquarter.postalcode}`}
                         placeholder="Enter Postal Code"
                         value={editPostalcode}
                         onChange={(e) => setEditPostalCode(e.target.value)}
