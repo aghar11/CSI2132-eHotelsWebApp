@@ -47,10 +47,31 @@ function EmployeeRoomView() {
                 body: JSON.stringify(body)
             });
 
-            const jsonData = await response.json()
+            const jsonData = await response.json();
 
             getRooms();
 
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const deleteRoom = async (room) => {
+        try {
+            const body = {};
+            body["roomNumber"] = parseInt(room.roomnumber);
+            body["hotelid"] = parseInt(room.hotelid);
+            body["companyname"] = room.companyname;
+            
+            const response = await fetch("http://localhost:5000/api/room", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+
+            getRooms();
         } catch (err) {
             console.error(err.message);
         }
@@ -165,7 +186,7 @@ function EmployeeRoomView() {
                                     <button id="roomInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Room Info</button>
                                 </td>
                                 <td>
-                                    <button id="roomDeleteButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#roomBookingModal" onClick={() => setUpBookingForm(room)}>Book</button>
+                                    <button id="roomDeleteButton" type="button" class="btn btn-danger" onClick={() => deleteRoom(room)}>Delete</button>
                                 </td>
                             </tr>
                         ))}
