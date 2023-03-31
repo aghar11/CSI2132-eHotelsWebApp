@@ -326,7 +326,7 @@ const ListHeadquarters = () => {
                     ))}
                 </tbody>
             </table>
-
+            
         {/* Edit Headquarter Category Modal */}
         {headquarters.map((headquarter) => (
         <div
@@ -463,6 +463,68 @@ const ListHeadquarters = () => {
         </div>
         ))}
 
+        {headquarters.map((headquarter) => {
+        <div class="modal-fade" id="contactInfoModal" tabindex='-1' role='dialog' aria-labelledby='contactInfoModalLabel' aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Headquarter Contact Info</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Company Name: {selectedHeadquarter.companyname}<br/>
+                        </p>
+                        <div className='table'>
+                            <table className="table mt-3 text-left">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Phone Numbers</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {phoneNumbers.map(phone => (
+                                <tr key = {phone.companyname}>
+                                    <td>{phone.phonenumber}</td>
+                                    <td>
+                                        <button id="phoneDeleteButton" type="button" class="btn btn-danger" onClick={() => deletePhone(phone)}>Delete</button>
+                                    </td>
+                                </tr>
+                                ))}
+                            </tbody>
+                            </table>
+                        </div>
+                        <div className='table'>
+                            <table className="table mt-3 text-left">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Emails</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {emails.map(email => (
+                                <tr key = {email.companyname}>
+                                    <td>{email.email}</td>
+                                    <td>
+                                        <button id="emailDeleteButton" type="button" class="btn btn-danger" onClick={() => deleteEmail(email)}>Delete</button>
+                                    </td>
+                                </tr>
+                                ))}
+                            </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        })}
         
         </Fragment>
     );
