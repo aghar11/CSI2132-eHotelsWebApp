@@ -228,7 +228,7 @@ router.delete("/headquarters/phone", async(req, res) => {
  *      "companyName": "Mariott"
  *  }
  */
-router.get("/headquarters/phone", async(req, res) => {
+router.put("/headquarters/phone", async(req, res) => {
     try {
         const companyName = req.body.companyName;
 
@@ -304,7 +304,7 @@ router.delete("/headquarters/email", async(req, res) => {
  *      "companyName": "Mariott"
  *  }
  */
-router.get("/headquarters/email", async(req, res) => {
+router.put("/headquarters/email", async(req, res) => {
     try {
         const companyName = req.body.companyName;
 

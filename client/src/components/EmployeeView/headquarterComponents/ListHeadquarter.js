@@ -20,6 +20,7 @@ const ListHeadquarters = () => {
     };
 
     const [headquarters, setHeadquarters] = useState([]);
+    const [selectedHeadquarter, setSelectedHeadquarter] = useState([]);
     const [companyName , setcompanyName] = useState("Company Name");
     const [streetNumber , setstreetnumber] = useState("Street Number");
     const [streetName , setstreetname] = useState("Street Name");
@@ -145,6 +146,137 @@ const ListHeadquarters = () => {
         };
     };
 
+
+    const [emails, setEmails] = useState([]);
+    const [phoneNumbers, setPhoneNumbers] = useState([]);
+
+    const getContactInfo = async (headquarter) => {
+        getHeadquarterEmails(headquarter);
+        getHeadquarterPhones(headquarter);
+        setSelectedHeadquarter(headquarter);
+    }
+
+    const getHeadquarterEmails = async (headquarter) => {
+        try {
+            setEmails([]);
+            const body = {"companyName": headquarter.companyname}
+            const response = await fetch("http://localhost:5000/api/headquarters/email", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                bosy: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+
+            setEmails(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const getHeadquarterPhones = async (headquarter) => {
+        try {
+            setEmails([]);
+            const body = {"companyName": headquarter.companyname}
+            const response = await fetch("http://localhost:5000/api/headquarters/phone", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                bosy: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+
+            setPhoneNumbers(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const [newPhone, setNewPhone] = useState([]);
+    const [newEmail, setNewEmail] = useState([]);
+
+    const setUpEmailPhoneForm = async () => {
+        setcompanyName(selectedHeadquarter.companyname);
+    }
+
+    const addEmail = async e => {
+        e.preventDefault();
+        try {
+            const body = {"companyName": companyName, "email": newEmail}
+
+            const response = await fetch("http://localhost:5000/api/headquarters/email", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                bosy: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+            getHeadquarterEmails(selectedHeadquarter);
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const addPhoneNumber = async e => {
+        e.preventDefault();
+        try {
+            const body = {"companyName": companyName, "phoneNumber": newPhone}
+
+            const response = await fetch("http://localhost:5000/api/headquarters/phone", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                bosy: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+            getHeadquarterPhones(selectedHeadquarter);
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const deleteEmail = async (email) => {
+        try {
+            const body = {"companyName": email.companyName, "email": email.email}
+
+            const response = await fetch("http://localhost:5000/api/headquarters/email", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                bosy: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+            getHeadquarterEmails(selectedHeadquarter);
+
+            window.location("/");
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const deletePhone = async (phone) => {
+        try {
+            const body = {"companyName": phone.companyName, "phone": phone.phone}
+
+            const response = await fetch("http://localhost:5000/api/headquarters/phone", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                bosy: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+            getHeadquarterPhones(selectedHeadquarter);
+
+            window.location("/");
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
     return (
         <Fragment>
             <h2 className="mt-5 text-centre">Headquarter Management</h2>
@@ -161,6 +293,7 @@ const ListHeadquarters = () => {
                         <th>State</th>
                         <th>Postal Code</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -174,6 +307,9 @@ const ListHeadquarters = () => {
                             <td>{headquarter.city}</td>
                             <td>{headquarter.state}</td>
                             <td>{headquarter.postalcode}</td>
+                            <td>
+                                <button id="contactInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#contactInfoModal" >View Contact Info</button>
+                            </td>
                             <td>
                             <button
                             type="button"
@@ -326,6 +462,8 @@ const ListHeadquarters = () => {
             </div>
         </div>
         ))}
+
+        
         </Fragment>
     );
 };
