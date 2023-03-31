@@ -101,7 +101,7 @@ const ListHotels = () => {
 
     return (
         <Fragment>
-          <h2 className="mt-5 text-centre">List of Hotels</h2>
+          <h2 className="mt-5 text-centre">Hotel Management</h2>
           <Container triggerText={triggerText} onSubmit={onSubmit} />
           <table className="table mt-2 text-centre">
             <thead>

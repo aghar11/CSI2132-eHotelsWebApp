@@ -239,8 +239,8 @@ function EmployeeRoomView() {
 
     return(
         <div class='container-fluid'>
-            <h1 className= "mt-5 center">Employee Dashboard</h1>
-            <button id="addRoomButton" type="button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#roomAddingModal">Add Room</button>
+            <h2 className= "mt-5 center">Room Management</h2>
+            <button id="addRoomButton" type="button" class="btn btn-success mr-1" data-toggle="modal" data-target="#roomAddingModal">Add Room</button>
             <div className="table-responsive">
                 <table className="table mt-3 text-centre table-hover">
                     <thead class="table-light">
