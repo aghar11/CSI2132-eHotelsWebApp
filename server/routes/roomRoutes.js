@@ -153,6 +153,25 @@ router.put("/room/viewtype", async(req, res)=>{
     
 });
 
+router.put("/room/expandable", async(req, res)=>{
+
+    try {
+        const roomNumber = req.body.roomNumber;
+        const hotelID = req.body.hotelID;
+        const companyName = req.body.companyName;
+        const expandable = req.body.expandable;
+        console.debug("Updating room expanddable of room with ID:"+roomNumber+" to "+expandable+".");
+
+        const updateRoom = await pool.query("UPDATE room SET expandable = $1 WHERE (roomNumber = $2 AND hotelID = $3 AND companyName = $4) RETURNING *",
+         [expandable, roomNumber, hotelID, companyName]);
+        res.json(updateRoom.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+
 router.delete("/room", async(req, res)=>{
 
     try {
@@ -187,7 +206,7 @@ router.post("/room/issue", async(req, res) => {
     try {
         const requestBody = req.body;
 
-        const newRoomIssue = await pool.query("INSERT INTO RoomIssue (Issue, RoomNumber, HotelD, CompanyName) VALUES\
+        const newRoomIssue = await pool.query("INSERT INTO RoomIssue (Issue, RoomNumber, HotelID, CompanyName) VALUES\
             ($1, $2, $3, $4) RETURNING *", [requestBody.issue, requestBody.roomNumber, requestBody.hotelID, requestBody.companyName]);
 
         console.debug("Added room issue: "+JSON.stringify(requestBody));
