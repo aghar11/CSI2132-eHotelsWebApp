@@ -55,9 +55,13 @@ const EmployeeView = () => {
 
     return (
         <div className="container-fluid">
-            <button id="homeButton" type="button" class="btn btn-danger"><Link to='/'>Home</Link></button>
-            <h1 className= "mt-5 text-centre">Employee View </h1>
+            <h1 className= "mt-3 text-centre">Employee View </h1>
             <table>
+                <td>
+                <Link to='/'>
+                <button id="homeButton" type="button" class="btn btn-success">Return Home</button>
+                </Link>
+                </td>
                 <td><button id="homeButton" type="button" class="btn btn-success" onClick={() => handleEmployeeClick()}>Employees</button></td>
                 <td><button id="homeButton" type="button" class="btn btn-success" onClick={() => handleCustomerClick()}>Customers</button></td>
                 <td><button id="homeButton" type="button" class="btn btn-success" onClick={() => handleHeadquartersClick()}>Headquarters</button></td>

@@ -5,7 +5,6 @@ import EmployeeView from './components/EmployeeView/EmployeeView';
 import CustomerDashboard from './components/CustomerView/CustomerDashboard';
 import RoomsByAreaView from './components/CustomerView/RoomsByAreaView';
 import HotelCapacityView from './components/CustomerView/HotelCapacityView';
-import EmployeeRoomView from './components/EmployeeView/roomManagementComponents/EmployeeRoomView'
 
 function Main() {
     return (
