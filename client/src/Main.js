@@ -11,7 +11,7 @@ function Main() {
         <main>
             <Routes>
                 <Route exact path="/" Component={Home}/>
-                <Route exact path="/employeeView" Component={ListHotels}/>
+                <Route exact path="/employeeView" Component={EmployeeView}/>
                 <Route exact path="/customerView" Component={CustomerDashboard}/>
                 <Route exact path='/roomsByArea' Component={RoomsByAreaView}/>
                 <Route exact path='/hotelCapacity' Component={HotelCapacityView}/>
