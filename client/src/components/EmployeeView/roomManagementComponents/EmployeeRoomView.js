@@ -76,6 +76,49 @@ function EmployeeRoomView() {
             console.error(err.message);
         }
     }
+    const [newRoomAmenity, setNewRoomAmenity] = useState([])
+
+    const setUpAmenityForm = async () => {
+        setNewRoomNumber(selectedRoom.roomnumber);
+        setNewHotelChain(selectedRoom.companyname);
+        setNewHotelID(selectedRoom.hotelid);
+    } 
+
+    const addAmenity = async () => {
+        try {
+            const body = {"amenity": newRoomAmenity, "roomNumber": parseInt(newRoomNumber), "hotelID": parseInt(newHotelID), "companyName": newHotelChain}
+            
+            const response = await fetch("http://localhost:5000/api/room/amenity", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+
+            window.location("/")
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const deleteAmenity = async (amenity) => {
+        try {
+            const body = {"amenity": amenity.amenity, "roomNumber": parseInt(amenity.roomnumber), "hotelID": parseInt(amenity.hotelid), "companyName": amenity.companyname}
+            
+            const response = await fetch("http://localhost:5000/api/room/amenity", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json();
+            
+            window.location("/")
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
 
     const [bookingCheckInDate, setBookingCheckInDate] = useState("DD/MM/YYYY");
     const [bookingCheckOutDate, setBookingCheckOutDate] = useState("DD/MM/YYYY");
@@ -170,6 +213,7 @@ function EmployeeRoomView() {
                             <th>Expandable</th>
                             <th></th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody className="table-hover">
@@ -184,6 +228,9 @@ function EmployeeRoomView() {
                                 <td>{room.expandable}</td>
                                 <td>
                                     <button id="roomInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Room Info</button>
+                                </td>
+                                <td>
+                                    <button id="roomInfoButton" type="button" class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Edit Room</button>
                                 </td>
                                 <td>
                                     <button id="roomDeleteButton" type="button" class="btn btn-danger" onClick={() => deleteRoom(room)}>Delete</button>
@@ -214,70 +261,50 @@ function EmployeeRoomView() {
                                 </p>
                                 <div className='table'>
                                     <table className="table mt-3 text-left">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Amenities</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {roomAmenities.map(amenity => (
-                                        <tr key = {amenity.roomnumber}>
-                                            <td>{amenity.amenity}</td>
-                                        </tr>
-                                        ))}
-                                    </tbody>
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Amenities</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {roomAmenities.map(amenity => (
+                                            <tr key = {amenity.roomnumber}>
+                                                <td>{amenity.amenity}</td>
+                                                <td>
+                                                    <button id="amenityDeleteButton" type="button" class="btn btn-danger" onClick={() => deleteAmenity(amenity)}>Delete</button>
+                                                </td>
+                                            </tr>
+                                            ))}
+                                        </tbody>
                                     </table>
+                                    <button id="amenityAddButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#addAmenityModal" onClick={setUpAmenityForm}>Add Amenity</button>
                                 </div>
                                 <div className='table'>
                                     <table className="table mt-3 text-left">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Issues</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {roomIssues.map(issue => (
-                                        <tr key = {issue.roomnumber}>
-                                            <td>{issue.issue}</td>
-                                        </tr>
-                                        ))}
-                                    </tbody>
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Issues</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {roomIssues.map(issue => (
+                                            <tr key = {issue.roomnumber}>
+                                                <td>{issue.issue}</td>
+                                                <td>
+                                                    <button id="issueDeleteButton" type="button" class="btn btn-danger" onClick={() => createNewRoom(issue)}>Delete</button>
+                                                </td>
+                                            </tr>
+                                            ))}
+                                        </tbody>
                                     </table>
+                                    <button id="issueAddButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#addIssueModal" >Add Issue</button>
                                 </div>
 
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal" id="roomBookingModal" tabindex='-1' role='dialog' aria-labelledby='roomBookingModalLabel' aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Room Booking</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                            <form className = "form-group" onSubmit={bookRoom}>
-                                <h6 className='mt-2'>CheckIn Date</h6>
-                                <input type= "text" className="form-control" value = {bookingCheckInDate} onChange={e => setBookingCheckInDate(e.target.value)}></input>
-                                <h6 className='mt-2'>CheckOut Date</h6>
-                                <input type= "text" className="form-control" value = {bookingCheckOutDate} onChange={e => setBookingCheckOutDate(e.target.value)}></input>
-                                <h6 className='mt-2'>Room Number</h6>
-                                <input type= "text" className="form-control" value = {bookingRoomNumber}></input>
-                                <h6 className='mt-2'>Hotel ID</h6>
-                                <input type= "text" className="form-control" value = {bookingHotelID}></input>
-                                <h6 className='mt-2'>Company Name</h6>
-                                <input type= "text" className="form-control" value = {bookingCompanyName}></input>
-                                <h6 className='my-2'>Customer ID</h6>
-                                <input type= "text" className="form-control" calue = {bookingCustomerID} onChange={e => setBookingCustomerID(e.target.value)}></input>
-                                <button className= "btn btn-success mt-4">Book Room</button>
-                            </form>
                             </div>
                         </div>
                     </div>
@@ -309,6 +336,32 @@ function EmployeeRoomView() {
                                 <h6 className='mt-2'>Expandable</h6>
                                 <input type= "text" className="form-control" value = {newExpandable} onChange={e => setNewExpandable(e.target.value)}></input>
                                 <button className= "btn btn-success mt-4">Add Room</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="addAmenityModal" tabindex='-1' role='dialog' aria-labelledby='addAmenityModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Amenity</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <form className = "form-group" onSubmit={addAmenity}>
+                                <h6 className='mt-2'>Room Number</h6>
+                                <input type= "text" className="form-control" value = {newRoomNumber} ></input>
+                                <h6 className='mt-2'>Hotel Chain</h6>
+                                <input type= "text" className="form-control" value = {newHotelChain} ></input>
+                                <h6 className='mt-2'>Hotel ID</h6>
+                                <input type= "text" className="form-control" value = {newHotelID} ></input>
+                                <h6 className='mt-2'>Amenity</h6>
+                                <input type= "text" className="form-control" value = {newRoomAmenity} onChange={e => setNewRoomAmenity(e.target.value)}></input>
+                                <button className= "btn btn-success mt-4">Add Amenity</button>
                             </form>
                             </div>
                         </div>
