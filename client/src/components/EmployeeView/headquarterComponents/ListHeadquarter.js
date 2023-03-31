@@ -7,39 +7,40 @@ const ListHeadquarters = () => {
     const triggerText = 'Add Headquarter';
     const onSubmit = (event) => {
         event.preventDefault(event);
-        setcompanyName(event.target.companyName.value);
-        setnumberOfHotels(event.target.numberOfHotels.value);        
-        setstreetnumber(event.target.streetNumber.value);
-        setstreetname(event.target.streetName.value);
-        setaptnumber(event.target.aptNumber.value);
+        setcompanyName(event.target.companyname.value);
+        setnumberOfHotels(parseInt(event.target.numberofhotels.value));        
+        setstreetnumber(parseInt(event.target.streetnumber.value));
+        setstreetname(event.target.streetname.value);
+        setaptnumber(parseInt(event.target.aptnumber.value));
         setcity(event.target.city.value);
         setstate(event.target.state.value);
-        setpostalcode(event.target.postalCode.value);
+        setpostalcode(event.target.postalcode.value);
         addHeadquarter();
+        getHeadquarters();
     };
 
     const [headquarters, setHeadquarters] = useState([]);
-    const [companyName , setcompanyName] = useState("Company Name")
-    const [streetNumber , setstreetnumber] = useState("Street Number")
-    const [streetName , setstreetname] = useState("Street Name")
-    const [aptNumber , setaptnumber] = useState("Apt Number")
-    const [city , setcity] = useState("City")
-    const [state , setstate] = useState("State")
-    const [postalCode , setpostalcode] = useState("Postal code")
-    const [numberOfHotels , setnumberOfHotels] = useState("Number of Hotels")
-    const [editNumberOfHotels, setEditNumberOfHotels] = useState("")
-    const [editStreetnumber, setEditStreetNumber] = useState("")
-    const [editStreetname, setEditStreetName] = useState("")
-    const [editAptnumber, setEditAptNumber] = useState("")
-    const [editCity, setEditCity] = useState("")
-    const [editState, setEditState] = useState("")
-    const [editPostalcode, setEditPostalCode] = useState("")
+    const [companyName , setcompanyName] = useState("Company Name");
+    const [streetNumber , setstreetnumber] = useState("Street Number");
+    const [streetName , setstreetname] = useState("Street Name");
+    const [aptNumber , setaptnumber] = useState("Apt Number");
+    const [city , setcity] = useState("City");
+    const [state , setstate] = useState("State");
+    const [postalCode , setpostalcode] = useState("Postal code");
+    const [numberOfHotels , setnumberOfHotels] = useState("Number of Hotels");
+    const [editNumberOfHotels, setEditNumberOfHotels] = useState("");
+    const [editStreetnumber, setEditStreetNumber] = useState("");
+    const [editStreetname, setEditStreetName] = useState("");
+    const [editAptnumber, setEditAptNumber] = useState("");
+    const [editCity, setEditCity] = useState("");
+    const [editState, setEditState] = useState("");
+    const [editPostalcode, setEditPostalCode] = useState("");
 
 
     const addHeadquarter = async (e) => {
         e.preventDefault();
         try {
-            const body = {companyName, numberOfHotels, streetNumber, streetName, aptNumber, city, state, postalCode};
+            const body = {companyname: companyName, numberofhotels: numberOfHotels, streetnumber: streetNumber, streetname: streetName, aptnumber: aptNumber, city: city, state: state, postalcode: postalCode};
             const response = await fetch("http://localhost:5000/api/headquarters", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -47,12 +48,12 @@ const ListHeadquarters = () => {
             });
         } catch (error) {
             console.error(error.message);
-        }
-    }
+        };
+    };
 
     const deleteHeadquarter = async (companyname) => {
         try {
-            const body = {companyname};
+            const body = {companyname: companyname};
             const deleteHeadquarter = await fetch(`http://localhost:5000/api/headquarters`, {
                 method: "DELETE"
             });
@@ -70,7 +71,7 @@ const ListHeadquarters = () => {
             setHeadquarters(jsonData);
         } catch (error) {
             console.error(error.message);
-        }
+        };
     };
 
     useEffect(() => {
@@ -91,7 +92,7 @@ const ListHeadquarters = () => {
             getHeadquarters();
         } catch (error) {
             console.error(error.message);
-        }
+        };
     };
 
     const updateAddress = async(companyName, streetNumber, streetName, aptNumber, city, state, postalCode) => {
@@ -113,7 +114,7 @@ const ListHeadquarters = () => {
             getHeadquarters();
         } catch (error) {
             console.error(error.message);
-        }
+        };
     };
     return (
         <Fragment>

@@ -37,15 +37,11 @@ const router = express.Router();
 router.post("/headquarters", async(req, res) => {
     try {
         const headquarter = req.body;
-        const address = req.body.address;
         console.debug("Adding Headquarter: "+JSON.stringify(headquarter)+" to database.")
 
-        const newHeadquarter =  await pool.query(
-            "INSERT INTO Headquarters (CompanyName, NumberOfHotels, StreetNumber, StreetName, AptNumber, City, State, PostalCode) VALUES \
-            ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
-            [headquarter.companyName, headquarter.numberOfHotels, address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
+        const newHeadquarter =  await pool.query("INSERT INTO Headquarters (companyname, numberofhotels, streetnumber, streetname, aptnumber, city, state, postalcode) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
+            [headquarter.companyname, headquarter.numberofhotels, headquarter.streetnumber, headquarter.streetname, headquarter.aptnumber, headquarter.city, headquarter.state, headquarter.postalcode]
         );
-
         res.json(newHeadquarter.rows);
     } catch (err) {
         console.error(err.message);
@@ -165,7 +161,7 @@ router.put("/headquarters/address", async(req, res) => {
  */
 router.delete("/headquarters", async(req, res) => {
     try {
-        const companyName = req.body.companyName;
+        const companyName = req.body.companyname;
         console.debug("Deleting Headquarter with company name: "+companyName+".");
 
         const deleteHeadquarter = await pool.query("DELETE FROM Headquarters WHERE CompanyName = $1", [companyName]);
