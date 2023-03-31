@@ -34,15 +34,15 @@ const ListHotels = () => {
     const [editCategory, setEditCategory] = useState("");
 
 
-    const addHotel = async (e) => {
+    const addHotel = async (hotelID, category, companyName, streetNumber, streetName, aptNumber, city, state, postalCode, numberOfRooms) => {
         try {
-            const body = {hotelid,category, companyname, streetnumber, streetname, aptnumber, city, state, postalcode, numberOfRooms};
+            const body = {hotelid: hotelID, category: category, companyname: companyName, streetnumber: streetNumber, streetname: streetName, aptnumber: aptNumber, city: city, state: state, postalcode: postalCode, numberofrooms: numberOfRooms};
             const response = await fetch("http://localhost:5000/api/hotel", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
-            e.preventDefault();
+            getHotels();
         } catch (error) {
             console.error(error.message);
         };
