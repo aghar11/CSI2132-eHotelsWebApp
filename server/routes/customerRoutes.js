@@ -13,6 +13,7 @@ const router = express.Router();
 
 /**
  Create a new customer
+ Create a new customer
  */
 router.post("/customer", async(req, res) => {
     try {
