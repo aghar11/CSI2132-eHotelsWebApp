@@ -102,13 +102,10 @@ router.get("/headquarters/specific", async(req , res) => {
  */
 router.put("/headquarters/numberOfHotels", async(req, res) => {
     try {
-        const companyName = req.body.companyName;
-        const numberOfHotels = req.body.numberOfHotels;
-        console.debug("Updating Headquarter number of hotels of headquarter with Company Name:"
-        +companyName+" to "+numberOfHotels+".");
-
-        const updatedHeadquarter = await pool.query("UPDATE Headquarters SET NumberOfHotels = $1 WHERE CompanyName = $2 RETURNING *",
-        [numberOfHotels, companyName]);
+        const companyName = req.body.companyname;
+        const numberOfHotels = req.body.numberofhotels;
+        console.debug("Updating Headquarter number of hotels of headquarter with Company Name:"+companyName+" to "+numberOfHotels+".");
+        const updatedHeadquarter = await pool.query("UPDATE Headquarters SET numberofhotels = $1 WHERE companyname = $2 RETURNING *", [numberOfHotels, companyName]);
         res.json(updatedHeadquarter.rows);
     } catch (err) {
         console.error(err.message);
@@ -136,11 +133,10 @@ router.put("/headquarters/numberOfHotels", async(req, res) => {
 router.put("/headquarters/address", async(req, res) => {
     try {
         const body = req.body;
-        console.debug("Updating Headquarter address of headquarter with Company Name:"
-        +companyName+" to "+JSON.stringify(address)+".");
+        console.debug("Updating Headquarter address of headquarter with Company Name:"+body.companyname+" to "+body.city+".");
 
-        const updatedHeadquarter = await pool.query("UPDATE Headquarters SET StreetNumber = $1, StreetName = $2, AptNumber = $3, City = $4, State = $5, PostalCode =$6 \
-        WHERE CompanyName = $7 RETURNING *",
+        const updatedHeadquarter = await pool.query("UPDATE Headquarters SET streetnumber = $1, streetname = $2, aptnumber = $3, city = $4, state = $5, postalcode =$6 \
+        WHERE companyname = $7 RETURNING *",
         [body.streetnumber, body.streetname, body.aptnumber, body.city, body.state, body.postalcode, body.companyname]);
         res.json(updatedHeadquarter.rows);
     } catch (err) {

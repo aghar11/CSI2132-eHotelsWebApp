@@ -87,7 +87,7 @@ const ListHeadquarters = () => {
             setcompanyName(companyName);
             setEditNumberOfHotels(numberOfHotels);
             const body = {companyname: companyName, numberofhotels: numberOfHotels};
-            const response = await fetch(`http://localhost:5000/api/headquarters/numberOfHotels`, {
+            const response = await fetch("http://localhost:5000/api/headquarters/numberOfHotels", {
                 method: "PUT",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
@@ -110,7 +110,7 @@ const ListHeadquarters = () => {
             setEditState(state);
             setEditPostalCode(postalCode);
             const body = {companyname: companyName, streetnumber: streetNumber, streetname: streetName, aptnumber: aptNumber, city: city, state: state, postalcode: postalCode};
-            const response = await fetch(`http://localhost:5000/api/headquarters/address`, {
+            const response = await fetch("http://localhost:5000/api/headquarters/address", {
                 method: "PUT",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
@@ -121,6 +121,32 @@ const ListHeadquarters = () => {
             console.error(error.message);
         };
     };
+
+    const editHeadquarter = async (headquarter) => {
+        try {
+            setEditStreetNumber(headquarter.streetnumber);
+            setEditNumberOfHotels(headquarter.numberofhotels);
+            setEditAptNumber(headquarter.aptnumber);
+            setEditCity(headquarter.city);
+            setEditState(headquarter.state);
+            setEditPostalCode(headquarter.postalcode);
+            setEditStreetName(headquarter.streetname);
+        } catch (error) {
+            console.error(error.message);
+        };
+    };
+
+    const saveChanges = async (companyname) => {
+        try {
+            console.log("companyname is: "+companyname);
+            updateAddress(companyname, editStreetnumber, editStreetname, editAptnumber, editCity, editState, editPostalcode);
+            updateNumberOfHotels(companyname, editNumberOfHotels);
+            getHeadquarters();
+        } catch (error) {
+            console.error(error.message);
+        };
+    };
+
     return (
         <Fragment>
             <h2 className="mt-5 text-centre">List of Headquarters</h2>
@@ -155,6 +181,7 @@ const ListHeadquarters = () => {
                             className="btn btn-warning"
                             data-toggle="modal"
                             data-target={`#id${headquarter.companyname}`}
+                            onClick={() => editHeadquarter(headquarter)}
                             >
                             Edit
                             </button>
@@ -179,7 +206,7 @@ const ListHeadquarters = () => {
             <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content">
                 <div className="modal-header">
-                    <h5 className="modal-title" id={`id${headquarter.companyname}`}>
+                    <h5 className="modal-title" >
                         Edit Headquarters
                     </h5>
                     <button
@@ -279,46 +306,24 @@ const ListHeadquarters = () => {
 
                 </form>
                 </div>
-                <div className="modal-footer">
-                <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-dismiss="modal"
-                >
-                    Close
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => {
-                    updateNumberOfHotels(
-                        headquarter.companyname,
-                        editNumberOfHotels
-                    );
-                    setEditStreetNumber(editStreetnumber);
-                    updateAddress(
-                        headquarter.companyname,
-                        editStreetnumber,
-                        editStreetname,
-                        editAptnumber,
-                        editCity,
-                        editState,
-                        editPostalcode,
-                    );
-                    setEditNumberOfHotels(editNumberOfHotels);
-                    setEditAptNumber(editAptnumber);
-                    setEditCity(editCity);
-                    setEditState(editState);
-                    setEditPostalCode(editPostalcode);
-                    setEditStreetName(editStreetname);
-                    
-                    }}
-                    data-dismiss="modal"
-                >
-                    Save changes
-                </button>
+                    <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => {saveChanges(headquarter.companyname)}}
+                            data-dismiss="modal"
+                        >
+                            Save changes
+                        </button>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
         ))}
