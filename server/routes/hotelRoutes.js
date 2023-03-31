@@ -43,7 +43,7 @@ router.post("/hotel", async(req, res)=> {
 
         const newHotel = await pool.query(
             "INSERT INTO Hotel (hotelid, companyname, category, numberofrooms, streetnumber, streetname, aptnumber, city, state, postalcode) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *", 
-            [hotel.hotelid, hotel.companyname, hotel.category, hotel.numberOfRooms, hotel.streetnumber, hotel.streetname, hotel.aptnumber, hotel.city, hotel.state, hotel.postalcode]
+            [hotel.hotelid, hotel.companyname, hotel.category, hotel.numberofrooms, hotel.streetnumber, hotel.streetname, hotel.aptnumber, hotel.city, hotel.state, hotel.postalcode]
         );
         res.json(newHotel.rows);
 

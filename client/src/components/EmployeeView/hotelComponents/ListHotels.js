@@ -17,7 +17,8 @@ const ListHotels = () => {
         setstate(event.target.state.value);
         setpostalcode(event.target.postalcode.value);
         setnumberOfRooms(parseInt(event.target.numberofrooms.value)); 
-        addHotel();       
+        addHotel();    
+        getHotels();   
     };
 
     const [hotels, setHotels] = useState([]);
@@ -36,13 +37,14 @@ const ListHotels = () => {
 
     const addHotel = async (e) => {
         try {
-            const body = {hotelid,category, companyname, streetnumber, streetname, aptnumber, city, state, postalcode, numberOfRooms};
+            const body = {hotelid: hotelid,category: category, companyname: companyname, streetnumber: streetnumber, streetname: streetname, aptnumber: aptnumber, city: city, state: state, postalcode: postalcode, numberofrooms: numberOfRooms};
             const response = await fetch("http://localhost:5000/api/hotel", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
             e.preventDefault();
+            getHotels();
         } catch (error) {
             console.error(error.message);
         };
