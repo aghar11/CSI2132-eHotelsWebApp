@@ -2,12 +2,11 @@ import React, {Fragment, useState} from "react"
 import { Link } from 'react-router-dom'
 import ListHotels from "./hotelComponents/ListHotels";
 import ListHeadquarter from "./headquarterComponents/ListHeadquarter"
+import EmployeeRoomView from "./roomManagementComponents/EmployeeRoomView";
 
 
 const EmployeeView = () => {
     
-    
-
     const [showRooms, setShowRooms] = useState(false);
     const [showHotels, setShowHotels] = useState(false);
     const [showEmployees, setShowEmployees] = useState(false);
@@ -73,7 +72,7 @@ const EmployeeView = () => {
                 )}
                 {showRooms &&(
                     <Fragment>
-                        <ListHotels/>
+                        <EmployeeRoomView/>
                     </Fragment>
                 )}
                 {showEmployees &&(
