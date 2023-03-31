@@ -1,14 +1,14 @@
-import '../../App.css';
+import '../../../App.css';
 import React, { useEffect, useState} from "react";
-import { Link } from 'react-router-dom';
+import { json, Link } from 'react-router-dom';
 
 
-function CustomerDashboard() {
+function EmployeeRoomView() {
     const [rooms, setRooms] = useState([]);
 
     const getRooms = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/room_hotel");
+            const response = await fetch("http://localhost:5000/api/room");
             const jsonData = await response.json();
             setRooms(jsonData);
         } catch (error) {
@@ -20,15 +20,41 @@ function CustomerDashboard() {
         getRooms();
     }, []);
 
+    const[newRoomNumber, setNewRoomNumber] = useState([]);
+    const[newHotelChain, setNewHotelChain] = useState([]);
+    const[newHotelID, setNewHotelID] = useState([]);
+    const[newView, setNewView] = useState([]);
+    const[newPrice, setNewPrice] = useState([]);
+    const[newCapacity, setNewCapacity] = useState([]);
+    const[newExpandable, setNewExpandable] = useState([]);
 
-    const [checkInDate, setCheckInDate] = useState("Check in Date");
-    const [checkOutDate, setCheckOutDate] = useState("Check out Date");
-    const [roomCapacity, setRoomCapacity] = useState("Room Capacity");
-    const [city, setCity] = useState("City");
-    const [companyName, setCompanyName] = useState("Company Name");
-    const [category, setCategory] = useState("Category");
-    const [numberOfRooms, setNumberOfRooms] = useState("Number Of Rooms");
-    const [price, setPrice] = useState("Price");
+    const createNewRoom = async () => {
+        try {
+            const body = {};
+            body["roomNumber"] = parseInt(newRoomNumber);
+            body["companyname"] = newHotelChain;
+            body["hotelid"] = parseInt(newHotelID);
+            body["viewtype"] = newView;
+            body["price"] = parseInt(newPrice);
+            body["capacity"] = parseInt(newCapacity);
+            body["expandable"] = newExpandable;
+
+            console.log(body);
+
+            const response = await fetch("http://localhost:5000/api/room", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+
+            const jsonData = await response.json()
+
+            getRooms();
+
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
 
     const [bookingCheckInDate, setBookingCheckInDate] = useState("DD/MM/YYYY");
     const [bookingCheckOutDate, setBookingCheckOutDate] = useState("DD/MM/YYYY");
@@ -37,45 +63,8 @@ function CustomerDashboard() {
     const [bookingCompanyName, setBookingCompanyName] = useState([]);
     const [bookingCustomerID, setBookingCustomerID] = useState([]);
 
-    const filterEntries = async e => {
-        e.preventDefault();
-        try {
-            var body = {}
-
-            if (roomCapacity) {
-                body["roomCapacity"] = roomCapacity;
-            }
-            if (city) {
-                body["city"] = city;
-            }
-            if (companyName) {
-                body["companyName"] = companyName;
-            }
-            if (category) {
-                body["category"] = category;
-            }
-            if (numberOfRooms) {
-                body["nomberOfRooms"] = numberOfRooms;
-            }
-            if (price) {
-                body["price"] = price;
-            }
-            
-            console.log(JSON.stringify(body));
-            const response = await fetch("http://localhost:5000/api/room_hotel_filters", {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            });
-            const jsonData = await response.json();
-
-            setRooms(jsonData)
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
-
     const [selectedRoom, setSelectedRoom] = useState([]);
+
     const [roomAmenities, setRoomAmenities] = useState([]);
 
     const getRoomAmenities = async (room) => {
@@ -145,30 +134,8 @@ function CustomerDashboard() {
 
     return(
         <div class='container-fluid'>
-            <h1 className= "mt-5 center">Customer Dashboard</h1>
-            <div className = 'text-left mt-3'>
-                <Link to='/roomsByArea'>
-                    <button id="customerViewByAreaButton" type="button" class="btn btn-primary mr-1">Rooms By Area View</button>
-                </Link>
-                <Link to='/hotelCapacity'>
-                    <button id="customerViewHotelCapacityButton" type="button" class="btn btn-primary mr-1">Hotel Capacity View</button>
-                </Link>
-                <Link to='/'>
-                    <button id="customerViewHomeButton" type="button" class="btn btn-primary">Return Home</button>
-                </Link>
-            </div> 
-            <h4 className = "mt-3">Filtering</h4>
-                <form className = "d-flex" onSubmit={filterEntries}>
-                    <input type= "text" className="form-control" value = {checkInDate} onChange={e => setCheckInDate(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {checkOutDate} onChange={e => setCheckOutDate(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {roomCapacity} onChange={e => setRoomCapacity(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {city} onChange={e => setCity(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {companyName} onChange={e => setCompanyName(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {category} onChange={e => setCategory(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {numberOfRooms} onChange={e => setNumberOfRooms(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {price} onChange={e => setPrice(e.target.value)}></input>
-                    <button className= "btn btn-success">Filter</button>
-                </form>
+            <h1 className= "mt-5 center">Employee Dashboard</h1>
+            <button id="addRoomButton" type="button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#roomAddingModal">Add Room</button>
             <div className="table-responsive">
                 <table className="table mt-3 text-centre table-hover">
                     <thead class="table-light">
@@ -180,9 +147,6 @@ function CustomerDashboard() {
                             <th>Capacity</th>
                             <th>Room View</th>
                             <th>Expandable</th>
-                            <th>City</th>
-                            <th>Hotel Category</th>
-                            <th>Hotel Number of Rooms</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -197,14 +161,11 @@ function CustomerDashboard() {
                                 <td>{room.capacity}</td>
                                 <td>{room.viewtype}</td>
                                 <td>{room.expandable}</td>
-                                <td>{room.city}</td>
-                                <td>{room.category}</td>
-                                <td>{room.numberofrooms}</td>
                                 <td>
                                     <button id="roomInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Room Info</button>
                                 </td>
                                 <td>
-                                    <button id="roomBoookingButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#roomBookingModal" onClick={() => setUpBookingForm(room)}>Book</button>
+                                    <button id="roomDeleteButton" type="button" class="btn btn-danger" data-toggle="modal" data-target="#roomBookingModal" onClick={() => setUpBookingForm(room)}>Book</button>
                                 </td>
                             </tr>
                         ))}
@@ -292,9 +253,41 @@ function CustomerDashboard() {
                                 <input type= "text" className="form-control" value = {bookingHotelID}></input>
                                 <h6 className='mt-2'>Company Name</h6>
                                 <input type= "text" className="form-control" value = {bookingCompanyName}></input>
-                                <h6 className='mt-2'>Customer ID</h6>
+                                <h6 className='my-2'>Customer ID</h6>
                                 <input type= "text" className="form-control" calue = {bookingCustomerID} onChange={e => setBookingCustomerID(e.target.value)}></input>
                                 <button className= "btn btn-success mt-4">Book Room</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="roomAddingModal" tabindex='-1' role='dialog' aria-labelledby='roomAddingModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Room</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <form className = "form-group" onSubmit={createNewRoom}>
+                                <h6 className='mt-2'>Room Number</h6>
+                                <input type= "text" className="form-control" value = {newRoomNumber} onChange={e => setNewRoomNumber(e.target.value)}></input>
+                                <h6 className='mt-2'>Hotel Chain</h6>
+                                <input type= "text" className="form-control" value = {newHotelChain} onChange={e => setNewHotelChain(e.target.value)}></input>
+                                <h6 className='mt-2'>Hotel ID</h6>
+                                <input type= "text" className="form-control" value = {newHotelID} onChange={e => setNewHotelID(e.target.value)}></input>
+                                <h6 className='mt-2'>View</h6>
+                                <input type= "text" className="form-control" value = {newView} onChange={e => setNewView(e.target.value)}></input>
+                                <h6 className='mt-2'>Price</h6>
+                                <input type= "text" className="form-control" value = {newPrice} onChange={e => setNewPrice(e.target.value)}></input>
+                                <h6 className='mt-2'>Capacity</h6>
+                                <input type= "text" className="form-control" value = {newCapacity} onChange={e => setNewCapacity(e.target.value)}></input>
+                                <h6 className='mt-2'>Expandable</h6>
+                                <input type= "text" className="form-control" value = {newExpandable} onChange={e => setNewExpandable(e.target.value)}></input>
+                                <button className= "btn btn-success mt-4">Add Room</button>
                             </form>
                             </div>
                         </div>
@@ -305,4 +298,4 @@ function CustomerDashboard() {
     )
 }
 
-export default CustomerDashboard;
+export default EmployeeRoomView;
