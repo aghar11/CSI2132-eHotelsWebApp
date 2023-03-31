@@ -111,6 +111,7 @@ const ListHotels = () => {
                 <th>City</th>
                 <th>Category</th>
                 <th>Number Of Rooms</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>

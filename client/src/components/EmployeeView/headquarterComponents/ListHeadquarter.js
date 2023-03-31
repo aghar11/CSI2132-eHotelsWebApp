@@ -160,6 +160,7 @@ const ListHeadquarters = () => {
                         <th>City</th>
                         <th>State</th>
                         <th>Postal Code</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>

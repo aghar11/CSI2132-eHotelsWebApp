@@ -187,7 +187,7 @@ router.post("/room/issue", async(req, res) => {
     try {
         const requestBody = req.body;
 
-        const newRoomIssue = await pool.query("INSERT INTO RoomIssue (Issue, RoomNumber, HotelD, CompanyName) VALUES\
+        const newRoomIssue = await pool.query("INSERT INTO RoomIssue (Issue, RoomNumber, HotelID, CompanyName) VALUES\
             ($1, $2, $3, $4) RETURNING *", [requestBody.issue, requestBody.roomNumber, requestBody.hotelID, requestBody.companyName]);
 
         console.debug("Added room issue: "+JSON.stringify(requestBody));
