@@ -180,3 +180,6 @@ CREATE VIEW total_capacity_by_hotel AS
 SELECT SUM(Capacity) AS TotalCapacity, CompanyName, City, HotelID
 FROM (Room NATURAL JOIN Hotel) AS Room_Hotel
 GROUP BY (CompanyName, City, HotelID);
+
+CREATE VIEW room_hotel AS
+SELECT * FROM Room NATURAL JOIN Hotel;

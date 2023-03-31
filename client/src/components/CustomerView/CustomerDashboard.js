@@ -1,6 +1,6 @@
 import '../../App.css';
 import React, { useEffect, useState} from "react";
-import { Link } from 'react-router-dom';
+import { json, Link } from 'react-router-dom';
 import RoomInfoModal from './RoomInfoModal';
 import RoomBookingModal from './RoomBookingModal';
 
@@ -9,7 +9,7 @@ function CustomerDashboard() {
 
     const getRooms = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/room");
+            const response = await fetch("http://localhost:5000/api/room_hotel");
             const jsonData = await response.json();
             setRooms(jsonData);
         } catch (error) {
@@ -22,14 +22,14 @@ function CustomerDashboard() {
     }, []);
 
 
-    const [checkInDate, setCheckInDate] = useState("checkInDate");
-    const [checkOutDate, setCheckOutDate] = useState("checkOutDate");
-    const [roomCapacity, setRoomCapacity] = useState("roomCapacity");
-    const [city, setCity] = useState("city");
-    const [companyName, setCompanyName] = useState("companyName");
-    const [category, setCategory] = useState("category");
-    const [totalNumberOfRooms, setTotalNumberOfRooms] = useState("totalNumberOfRooms");
-    const [price, setPrice] = useState("price");
+    const [checkInDate, setCheckInDate] = useState("Check in Date");
+    const [checkOutDate, setCheckOutDate] = useState("Check out Date");
+    const [roomCapacity, setRoomCapacity] = useState("Room Capacity");
+    const [city, setCity] = useState("City");
+    const [companyName, setCompanyName] = useState("Company Name");
+    const [category, setCategory] = useState("Category");
+    const [numberOfRooms, setNumberOfRooms] = useState("Number Of Rooms");
+    const [price, setPrice] = useState("Price");
 
     const [bookingCheckInDate, setBookingCheckInDate] = useState("DD/MM/YYYY");
     const [bookingCheckOutDate, setBookingCheckOutDate] = useState("DD/MM/YYYY");
@@ -38,10 +38,39 @@ function CustomerDashboard() {
     const [bookingCompanyName, setBookingCompanyName] = useState([]);
     const [bookingCustomerID, setBookingCustomerID] = useState([]);
 
-    const onSubmitForm = async e => {
+    const filterEntries = async e => {
         e.preventDefault();
         try {
+            var body = {}
+
+            if (roomCapacity) {
+                body["roomCapacity"] = roomCapacity;
+            }
+            if (city) {
+                body["city"] = city;
+            }
+            if (companyName) {
+                body["companyName"] = companyName;
+            }
+            if (category) {
+                body["category"] = category;
+            }
+            if (numberOfRooms) {
+                body["nomberOfRooms"] = numberOfRooms;
+            }
+            if (price) {
+                body["price"] = price;
+            }
             
+            console.log(JSON.stringify(body));
+            const response = await fetch("http://localhost:5000/api/room_hotel_filters", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+
+            setRooms(jsonData)
         } catch (error) {
             console.error(error.message);
         }
@@ -52,10 +81,15 @@ function CustomerDashboard() {
 
     const getRoomAmenities = async (room) => {
         try {
-            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelID, "companyName": room.companyname}
-            console.log(body);
-            const response = await fetch(`http://localhost:5000/api/room/amenity/${room.roomnumber}/${room.hotelID}/${room.companyname}`);
+            setRoomAmenities([]);
+            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelid, "companyName": room.companyname}
+            const response = await fetch(`http://localhost:5000/api/room/amenity`, {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
             const jsonData = await response.json()
+            console.log(jsonData)
             setRoomAmenities(jsonData);
         } catch (err) {
             console.error(err.message);
@@ -66,9 +100,14 @@ function CustomerDashboard() {
 
     const getRoomIssues = async (room) => {
         try {
+            setRoomIssues([]);
             const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelid, "companyName": room.companyname}
             console.log(JSON.stringify(body));
-            const response = await fetch(`http://localhost:5000/api/room/issue/${room.roomnumber}/${room.hotelID}/${room.companyname}`);
+            const response = await fetch("http://localhost:5000/api/room/issue", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
             const jsonData = await response.json();
             setRoomIssues(jsonData);
         } catch (err) {
@@ -77,9 +116,9 @@ function CustomerDashboard() {
     }
 
     const getRoomInfo = async (room) => {
-        setSelectedRoom(room);
         getRoomAmenities(room);
         getRoomIssues(room);
+        setSelectedRoom(room);
     }
 
     const setUpBookingForm = async (room) => {
@@ -88,7 +127,7 @@ function CustomerDashboard() {
         setBookingCompanyName(room.companyname);
     }
 
-    const bookRoom = async () => {
+    const bookRoom = async (e) => {
         try {
             const body = {"checkInDate": bookingCheckInDate, "checkOutDate": bookingCheckOutDate, "roomNumber": bookingRoomNumber,
                 "hotelID": bookingHotelID, "companyName": bookingCompanyName, "customerID": bookingCustomerID, "status": "RESERVED"}
@@ -120,14 +159,14 @@ function CustomerDashboard() {
                 </Link>
             </div> 
             <h4 className = "mt-3">Filtering</h4>
-                <form className = "d-flex" onSubmit={onSubmitForm}>
+                <form className = "d-flex" onSubmit={filterEntries}>
                     <input type= "text" className="form-control" value = {checkInDate} onChange={e => setCheckInDate(e.target.value)}></input>
                     <input type= "text" className="form-control" value = {checkOutDate} onChange={e => setCheckOutDate(e.target.value)}></input>
                     <input type= "text" className="form-control" value = {roomCapacity} onChange={e => setRoomCapacity(e.target.value)}></input>
                     <input type= "text" className="form-control" value = {city} onChange={e => setCity(e.target.value)}></input>
                     <input type= "text" className="form-control" value = {companyName} onChange={e => setCompanyName(e.target.value)}></input>
                     <input type= "text" className="form-control" value = {category} onChange={e => setCategory(e.target.value)}></input>
-                    <input type= "text" className="form-control" value = {totalNumberOfRooms} onChange={e => setTotalNumberOfRooms(e.target.value)}></input>
+                    <input type= "text" className="form-control" value = {numberOfRooms} onChange={e => setNumberOfRooms(e.target.value)}></input>
                     <input type= "text" className="form-control" value = {price} onChange={e => setPrice(e.target.value)}></input>
                     <button className= "btn btn-success">Filter</button>
                 </form>
@@ -136,12 +175,15 @@ function CustomerDashboard() {
                     <thead class="table-light">
                         <tr>
                             <th>Room Number</th>
-                            <th>Company Name</th>
-                            <th>Hotel Category</th>
+                            <th>Hotel Chain</th>
+                            <th>Hotel ID</th>
                             <th>Price</th>
                             <th>Capacity</th>
-                            <th>Room Type</th>
+                            <th>Room View</th>
                             <th>Expandable</th>
+                            <th>City</th>
+                            <th>Hotel Category</th>
+                            <th>Hotel Number of Rooms</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -156,6 +198,9 @@ function CustomerDashboard() {
                                 <td>{room.capacity}</td>
                                 <td>{room.viewtype}</td>
                                 <td>{room.expandable}</td>
+                                <td>{room.city}</td>
+                                <td>{room.category}</td>
+                                <td>{room.numberofrooms}</td>
                                 <td>
                                     <button id="roomInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Room Info</button>
                                 </td>
@@ -194,9 +239,9 @@ function CustomerDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {roomAmenities.map(room => (
-                                        <tr key = {room.roomnumber}>
-                                            <td>{room.roomamenity}</td>
+                                        {roomAmenities.map(amenity => (
+                                        <tr key = {amenity.roomnumber}>
+                                            <td>{amenity.amenity}</td>
                                         </tr>
                                         ))}
                                     </tbody>
@@ -210,9 +255,9 @@ function CustomerDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {roomIssues.map(room => (
-                                        <tr key = {room.roomnumber}>
-                                            <td>{room.roomissue}</td>
+                                        {roomIssues.map(issue => (
+                                        <tr key = {issue.roomnumber}>
+                                            <td>{issue.issue}</td>
                                         </tr>
                                         ))}
                                     </tbody>
