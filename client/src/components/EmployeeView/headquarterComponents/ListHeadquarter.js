@@ -92,7 +92,6 @@ const ListHeadquarters = () => {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
-            window.location = "/";
             getHeadquarters();
         } catch (error) {
             console.error(error.message);
@@ -115,7 +114,6 @@ const ListHeadquarters = () => {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
-            window.location = "/";
             getHeadquarters();
         } catch (error) {
             console.error(error.message);
