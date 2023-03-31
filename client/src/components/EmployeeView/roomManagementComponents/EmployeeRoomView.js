@@ -76,6 +76,51 @@ function EmployeeRoomView() {
             console.error(err.message);
         }
     }
+
+    const [selectedRoom, setSelectedRoom] = useState([]);
+    const [roomAmenities, setRoomAmenities] = useState([]);
+    const [roomIssues, setRoomIssues] = useState([])
+
+    const getRoomAmenities = async (room) => {
+        try {
+            setRoomAmenities([]);
+            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelid, "companyName": room.companyname}
+            const response = await fetch(`http://localhost:5000/api/room/amenity`, {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json()
+            console.log(jsonData)
+            setRoomAmenities(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const getRoomIssues = async (room) => {
+        try {
+            setRoomIssues([]);
+            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelid, "companyName": room.companyname}
+            console.log(JSON.stringify(body));
+            const response = await fetch("http://localhost:5000/api/room/issue", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            setRoomIssues(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const getRoomInfo = async (room) => {
+        getRoomAmenities(room);
+        getRoomIssues(room);
+        setSelectedRoom(room);
+    }
+
     const [newRoomAmenity, setNewRoomAmenity] = useState([]);
     const [newRoomIssue, setNewRoomIssue] = useState([]);
 
@@ -161,77 +206,89 @@ function EmployeeRoomView() {
         }
     }
 
-    const [bookingCheckInDate, setBookingCheckInDate] = useState("DD/MM/YYYY");
-    const [bookingCheckOutDate, setBookingCheckOutDate] = useState("DD/MM/YYYY");
-    const [bookingRoomNumber, setBookingRoomNumber] = useState([]);
-    const [bookingHotelID, setBookingHotelID] = useState([]);
-    const [bookingCompanyName, setBookingCompanyName] = useState([]);
-    const [bookingCustomerID, setBookingCustomerID] = useState([]);
-
-    const [selectedRoom, setSelectedRoom] = useState([]);
-
-    const [roomAmenities, setRoomAmenities] = useState([]);
-
-    const getRoomAmenities = async (room) => {
-        try {
-            setRoomAmenities([]);
-            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelid, "companyName": room.companyname}
-            const response = await fetch(`http://localhost:5000/api/room/amenity`, {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            });
-            const jsonData = await response.json()
-            console.log(jsonData)
-            setRoomAmenities(jsonData);
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    const [roomIssues, setRoomIssues] = useState([])
-
-    const getRoomIssues = async (room) => {
-        try {
-            setRoomIssues([]);
-            const body = {"roomNumber": room.roomnumber, "hotelID": room.hotelid, "companyName": room.companyname}
-            console.log(JSON.stringify(body));
-            const response = await fetch("http://localhost:5000/api/room/issue", {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            });
-            const jsonData = await response.json();
-            setRoomIssues(jsonData);
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    const getRoomInfo = async (room) => {
-        getRoomAmenities(room);
-        getRoomIssues(room);
+    
+    const setUpRoomEditForm = async (room) => {
         setSelectedRoom(room);
+        setNewView(room.viewtype);
+        setNewPrice(room.price);
+        setNewCapacity(room.capacity);
+        setNewExpandable(room.expandable);
     }
 
-    const setUpBookingForm = async (room) => {
-        setBookingRoomNumber(room.roomnumber);
-        setBookingHotelID(room.hotelid);
-        setBookingCompanyName(room.companyname);
-    }
-
-    const bookRoom = async (e) => {
+    const editRoom = async (e) => {
+        e.preventDefault();
         try {
-            const body = {"checkInDate": bookingCheckInDate, "checkOutDate": bookingCheckOutDate, "roomNumber": bookingRoomNumber,
-                "hotelID": bookingHotelID, "companyName": bookingCompanyName, "customerID": bookingCustomerID, "status": "RESERVED"}
-            
-            const response = await fetch("http://localhost:5000/api/booking", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            })
+            const baseBody = {"roomNumber": selectedRoom.roomnumber, "hotelID": selectedRoom.hotelid, "companyName": selectedRoom.companyname};
 
-            window.location = "/";
+            if (newView) {
+                const reqBody = baseBody;
+                reqBody["viewtype"] = newView;
+
+                try {
+                    const response = await fetch("http://localhost:5000/api/room/viewtype", {
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(reqBody)
+                    });
+
+                    const jsonData = await response.json();
+                } catch (err) {
+                    console.error(err.message);
+                }
+            }
+
+            if (newPrice) {
+                const reqBody = baseBody;
+                reqBody["price"] = newPrice;
+
+                try {
+                    const response = await fetch("http://localhost:5000/api/room/price", {
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(reqBody)
+                    });
+
+                    const jsonData = await response.json();
+                } catch (err) {
+                    console.error(err.message);
+                }
+            }
+
+            if (newCapacity) {
+                const reqBody = baseBody;
+                reqBody["capacity"] = newCapacity;
+
+                try {
+                    const response = await fetch("http://localhost:5000/api/room/capacity", {
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(reqBody)
+                    });
+
+                    const jsonData = await response.json();
+                } catch (err) {
+                    console.error(err.message);
+                }
+            }
+
+            if (newExpandable) {
+                const reqBody = baseBody;
+                reqBody["expandable"] = newExpandable;
+
+                try {
+                    const response = await fetch("http://localhost:5000/api/room/expandable", {
+                        method: "PUT",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(reqBody)
+                    });
+
+                    const jsonData = await response.json();
+                } catch (err) {
+                    console.error(err.message);
+                }
+            }
+
+            getRooms();
         } catch (err) {
             console.error(err.message);
         }
@@ -271,7 +328,7 @@ function EmployeeRoomView() {
                                     <button id="roomInfoButton" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Room Info</button>
                                 </td>
                                 <td>
-                                    <button id="roomInfoButton" type="button" class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#roomInfoModal" onClick={() => getRoomInfo(room)}>Edit Room</button>
+                                    <button id="roomEditButton" type="button" class="btn btn-outline-success ml-2" data-toggle="modal" data-target="#roomEditModal" onClick={() => setUpRoomEditForm(room)}>Edit Room</button>
                                 </td>
                                 <td>
                                     <button id="roomDeleteButton" type="button" class="btn btn-danger" onClick={() => deleteRoom(room)}>Delete</button>
@@ -426,7 +483,7 @@ function EmployeeRoomView() {
                                 <input type= "text" className="form-control" value = {newHotelChain} ></input>
                                 <h6 className='mt-2'>Hotel ID</h6>
                                 <input type= "text" className="form-control" value = {newHotelID} ></input>
-                                <h6 className='mt-2'>Amenity</h6>
+                                <h6 className='mt-2'>Issue</h6>
                                 <input type= "text" className="form-control" value = {newRoomIssue} onChange={e => setNewRoomIssue(e.target.value)}></input>
                                 <button className= "btn btn-success mt-4">Add Issue</button>
                             </form>
@@ -434,6 +491,42 @@ function EmployeeRoomView() {
                         </div>
                     </div>
                 </div>
+                
+                <div class="modal" id="roomEditModal" tabindex='-1' role='dialog' aria-labelledby='roomEditingModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Room</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <form className = "form-group" onSubmit={editRoom}>
+                                <h6 className='mt-2'>Room Number</h6>
+                                <input type= "text" className="form-control" value = {selectedRoom.roomnumber}></input>
+                                <h6 className='mt-2'>Hotel Chain</h6>
+                                <input type= "text" className="form-control" value = {selectedRoom.companyname}></input>
+                                <h6 className='mt-2'>Hotel ID</h6>
+                                <input type= "text" className="form-control" value = {selectedRoom.hotelid}></input>
+                                <h6 className='mt-2'>View</h6>
+                                <input type= "text" className="form-control" value = {newView} onChange={e => setNewView(e.target.value)}></input>
+                                <h6 className='mt-2'>Price</h6>
+                                <input type= "text" className="form-control" value = {newPrice} onChange={e => setNewPrice(e.target.value)}></input>
+                                <h6 className='mt-2'>Capacity</h6>
+                                <input type= "text" className="form-control" value = {newCapacity} onChange={e => setNewCapacity(e.target.value)}></input>
+                                <h6 className='mt-2'>Expandable</h6>
+                                <input type= "text" className="form-control" value = {newExpandable} onChange={e => setNewExpandable(e.target.value)}></input>
+                                <button className= "btn btn-success mt-4">Save Changes</button>
+                            </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
     )

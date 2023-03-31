@@ -153,6 +153,25 @@ router.put("/room/viewtype", async(req, res)=>{
     
 });
 
+router.put("/room/expandable", async(req, res)=>{
+
+    try {
+        const roomNumber = req.body.roomNumber;
+        const hotelID = req.body.hotelID;
+        const companyName = req.body.companyName;
+        const expandable = req.body.expandable;
+        console.debug("Updating room expanddable of room with ID:"+roomNumber+" to "+expandable+".");
+
+        const updateRoom = await pool.query("UPDATE room SET expandable = $1 WHERE (roomNumber = $2 AND hotelID = $3 AND companyName = $4) RETURNING *",
+         [expandable, roomNumber, hotelID, companyName]);
+        res.json(updateRoom.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+
 router.delete("/room", async(req, res)=>{
 
     try {
