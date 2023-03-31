@@ -292,7 +292,7 @@ function CustomerDashboard() {
                                 <input type= "text" className="form-control" value = {bookingHotelID}></input>
                                 <h6 className='mt-2'>Company Name</h6>
                                 <input type= "text" className="form-control" value = {bookingCompanyName}></input>
-                                <h6 className='my-2'>Customer ID</h6>
+                                <h6 className='mt-2'>Customer ID</h6>
                                 <input type= "text" className="form-control" calue = {bookingCustomerID} onChange={e => setBookingCustomerID(e.target.value)}></input>
                                 <button className= "btn btn-success mt-4">Book Room</button>
                             </form>

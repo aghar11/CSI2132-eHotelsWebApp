@@ -147,7 +147,7 @@ const ListHeadquarters = () => {
 
     return (
         <Fragment>
-            <h2 className="mt-5 text-centre">List of Headquarters</h2>
+            <h2 className="mt-5 text-centre">Headquarter Management</h2>
             <Container triggerText={triggerText} onSubmit={onSubmit} />
             <table className="table mt-2 text-centre">
                 <thead>
@@ -160,6 +160,7 @@ const ListHeadquarters = () => {
                         <th>City</th>
                         <th>State</th>
                         <th>Postal Code</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
