@@ -45,6 +45,40 @@ router.get("/room", async(req, res)=>{
     
 });
 
+router.get("/room_hotel", async(req, res)=>{
+    try {
+        console.debug("Retriving all entries from room_hotel view.");
+
+        const allRooms = await pool.query("Select * from room_hotel");
+        res.json(allRooms.rows);
+
+    } catch (err) {
+        console.error(err.message);
+    }
+    
+});
+
+router.put("/room_hotel_filters", async (req, res) => {
+    try {
+        const requestBody = req.body;
+
+        console.debug("Applying Filters to table: "+JSON.stringify(requestBody));
+
+        const filteredEntries = await pool.query("SELECT * FROM room_hotel\
+            WHERE (Capacity = COALESCE($1 , Capacity) \
+            AND City = COALESCE($2, City)\
+            AND CompanyName = COALESCE($3, CompanyName)\
+            AND Category = COALESCE($4, Category)\
+            AND NumberOfRooms = COALESCE($5, NumberOfRooms)\
+            AND Price = COALESCE($6, Price))", 
+            [requestBody.roomCapacity, requestBody.city, requestBody.companyName, requestBody.category, requestBody.numerOfRooms, requestBody.price]);
+        
+        res.json(filteredEntries.rows);
+    } catch (err) {
+        console.error(err.message);
+    }
+})
+
 router.get("/room/specific", async(req, res)=>{
 
     try {
@@ -201,9 +235,10 @@ router.delete("/room/issue", async(req, res) => {
  *      "companyName": "Mariott"
  *  }
  */
-router.get("/room/issue", async(req, res) => {
+router.put("/room/issue", async(req, res) => {
     try {
         const requestBody = req.body;
+        console.debug("Getting room issues: "+JSON.stringify(requestBody));
 
         const allRoomIssues = await pool.query("SELECT * FROM RoomIssue WHERE (RoomNumber = $1 AND HotelID = $2 AND CompanyName = $3)",
         [requestBody.roomNumber, requestBody.hotelID, requestBody.companyName]);
@@ -279,9 +314,10 @@ router.delete("/room/amenity", async(req, res) => {
  *      "companyName": "Mariott"
  *  }
  */
-router.get("/room/amenity", async(req, res) => {
+router.put("/room/amenity", async(req, res) => {
     try {
         const requestBody = req.body;
+        console.debug("Getting room amenities: "+JSON.stringify(requestBody));
 
         const allRoomIssues = await pool.query("SELECT * FROM RoomAmenity WHERE (RoomNumber = $1 AND HotelID = $2 AND CompanyName = $3)",
         [requestBody.roomNumber, requestBody.hotelID, requestBody.companyName]);
