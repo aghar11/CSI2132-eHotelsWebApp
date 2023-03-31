@@ -13,7 +13,7 @@ export const Form = ({ onSubmit }) => {
             </div>
             <div className="form-group">
                 <label >Number Of Hotels</label>
-                <input className="form-control" id="numberofrooms" placeholder="Number of Hotels" type="integer"/>
+                <input className="form-control" id="numberofhotels" placeholder="Number of Hotels" type="integer"/>
             </div>
             <div className="form-group">
                 <label >Street Number</label>
