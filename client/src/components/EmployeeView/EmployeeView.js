@@ -4,7 +4,6 @@ import ListHotels from "./hotelComponents/ListHotels";
 import ListHeadquarter from "./headquarterComponents/ListHeadquarter"
 import EmployeeRoomView from "./roomManagementComponents/EmployeeRoomView";
 
-
 const EmployeeView = () => {
     
     const [showRooms, setShowRooms] = useState(false);
