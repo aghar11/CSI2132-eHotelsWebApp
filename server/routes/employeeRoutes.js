@@ -44,15 +44,13 @@ const router = express.Router();
 router.post("/employee", async(req, res)=> {
     try {
         const employee = req.body;
-        const name = req.body.name; 
-        const address = req.body.address;
         
         console.log("Adding Employee with employee ID: "+employee.employeeid+" to database.");
 
         const newEmployee = await pool.query(
-            "INSERT INTO Employee (employeeid, SIN, HotelID, CompanyName, FirstName, MiddleName, LastName, StreetNumber, StreetName, AptNumber, City, State, PostalCode) \
+            "INSERT INTO Employee (employeeid, sin, hotelid, companyname, firstname, middlename, lastname, streetnumber, streetname, aptnumber, city, state, postalcode) \
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *", 
-            [employee.employeeid, employee.sin, employee.hotelid, employee.companyName, name.firstName, name.middleName, name.lastName, address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode]
+            [employee.employeeid, employee.sin, employee.hotelid, employee.companyname, employee.firstname, employee.middlename, employee.lastname, employee.streetnumber, employee.streetname, employee.aptnumber, employee.city, employee.state, employee.postalcode]
         );
 
         res.json(newEmployee.rows);
@@ -93,7 +91,7 @@ router.get("/employee/specific", async(req, res)=>{
         const requestBody = req.body;
 
         const employee = await pool.query("SELECT * FROM Employee WHERE (EmployeeID = $1 AND HotelID = $2 AND CompanyName = $3)", 
-            [requestBody.employeeid, requestBody.hotelid, requestBody.companyName]);
+            [requestBody.employeeid, requestBody.hotelid, requestBody.companyname]);
 
         console.debug("Retrieving employee: "+JSON.stringify(requestBody));
         res.json(employee.rows);
@@ -128,13 +126,12 @@ router.put("/employee/address", async(req, res)=>{
 
     try {
         const requestBody = req.body;
-        const address =  req.body.address;
-        console.debug("Updating address of Employee with new streetName: "+address.streetName+".");
+        console.debug("Updating address of Employee with new streetName: "+requestBody.streetname+".");
         const updateEmployee = await pool.query("UPDATE Employee \
-            SET StreetNumber = $1, StreetName = $2, AptNumber = $3, City = $4, State = $5, PostalCode = $6\
-            WHERE (EmployeeID = $7 AND HotelID = $8 AND CompanyName = $9)",
-            [address.streetNumber, address.streetName, address.aptNumber, address.city, address.state, address.postalCode,
-            requestBody.employeeid, requestBody.hotelid, requestBody.companyName]);
+            SET streetnumber = $1, streetname = $2, aptnumber = $3, city = $4, state = $5, postalcode = $6\
+            WHERE (employeeid = $7 AND hotelid = $8 AND companyname = $9) RETURNING *",
+            [requestBody.streetnumber, requestBody.streetname, requestBody.aptnumber, requestBody.city, requestBody.state, requestBody.postalcode,
+            requestBody.employeeid, requestBody.hotelid, requestBody.companyname]);
         res.json(updateEmployee.rows);
 
     } catch (err) {
@@ -148,9 +145,8 @@ router.put("/employee/name", async(req, res)=>{
 
     try {
         const info = req.body;
-        const name = req.body.name;
-        console.debug("Updating name of Employee with new firstName: "+name.firstName+".");
-        const updateEmployeeName = await pool.query("UPDATE Employee SET firstname = $1, middlename = $2, lastname = $3 WHERE (EmployeeID = $4 AND HotelID = $5 AND CompanyName = $6) RETURNING *", [name.firstName, name.middleName, name.lastName , info.employeeid, info.hotelid, info.companyName]);
+        console.debug("Updating name of Employee with new name: "+info.firstname+".");
+        const updateEmployeeName = await pool.query("UPDATE Employee SET firstname = $1, middlename = $2, lastname = $3 WHERE (employeeid = $4 AND hotelid = $5 AND companyname = $6) RETURNING *", [info.firstname, info.middlename, info.lastname , info.employeeid, info.hotelid, info.companyname]);
         res.json(updateEmployeeName.rows);
 
     } catch (err) {
