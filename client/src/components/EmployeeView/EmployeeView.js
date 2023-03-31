@@ -87,7 +87,7 @@ const EmployeeView = () => {
                 )}
                 {showHeadquarters &&(
                     <Fragment>
-                        <ListHotels/>
+                        <ListHeadquarter/>
                     </Fragment>
                 )}
             </div>
