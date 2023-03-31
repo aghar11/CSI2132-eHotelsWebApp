@@ -1,8 +1,7 @@
 import '../../App.css';
 import React, { useEffect, useState} from "react";
 import { json, Link } from 'react-router-dom';
-import RoomInfoModal from './RoomInfoModal';
-import RoomBookingModal from './RoomBookingModal';
+
 
 function CustomerDashboard() {
     const [rooms, setRooms] = useState([]);
