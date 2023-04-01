@@ -2,6 +2,7 @@
  * Handle API requests related to the Employee table.
  *
  * @author Axel Tang.
+ * @author Axel Tang.
  * @since  March, 2023
  */
 

@@ -2,6 +2,7 @@
  * Handle API requests related to the Headquarters table.
  *
  * @author Akarsh Gharge.
+ * @author Akarsh Gharge.
  * @since  March, 2023
  */
 
