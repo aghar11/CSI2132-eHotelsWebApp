@@ -15,21 +15,9 @@ CREATE TABLE IF NOT EXISTS Headquarters(
 	City Varchar(225) NOT NULL,
 	State Varchar(225) NOT NULL,
 	PostalCode Varchar(25) NOT NULL
-	CompanyName Varchar(225) PRIMARY KEY,
-	NumberOfHotels Integer NOT NULL,
-	StreetNumber Integer NOT NULL,
-	StreetName Varchar(225) NOT NULL,
-	AptNumber Varchar(25),
-	City Varchar(225) NOT NULL,
-	State Varchar(225) NOT NULL,
-	PostalCode Varchar(25) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS HeadquartersPhone(
-	CompanyName Varchar(225),
-	phoneNumber VarChar(20),
-	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
-	PRIMARY KEY (phoneNumber, CompanyName)
 	CompanyName Varchar(225),
 	phoneNumber VarChar(20),
 	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
@@ -41,26 +29,10 @@ CREATE TABLE IF NOT EXISTS HeadquartersEmail(
 	email VarChar(40),
 	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
 	PRIMARY KEY (email, CompanyName)
-	CompanyName Varchar(225),
-	email VarChar(40),
-	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
-	PRIMARY KEY (email, CompanyName)
 );
 
 CREATE TABLE IF NOT EXISTS Hotel (
-	HotelID Integer UNIQUE,
-	CompanyName Varchar(225) NOT NULL,
-	Category Varchar(225) NOT NULL,
-	NumberOfRooms Integer NOT NULL,
-	StreetNumber Integer NOT NULL,
-	StreetName Varchar(225) NOT NULL,
-	AptNumber Varchar(25),
-	City Varchar(225) NOT NULL,
-	State Varchar(225) NOT NULL,
-	PostalCode Varchar(25) NOT NULL,
-	FOREIGN KEY (CompanyName) REFERENCES Headquarters(CompanyName) ON DELETE CASCADE,
-	PRIMARY KEY (HotelID, CompanyName)
-	HotelID Integer UNIQUE,
+	HotelID Integer,
 	CompanyName Varchar(225) NOT NULL,
 	Category Varchar(225) NOT NULL,
 	NumberOfRooms Integer NOT NULL,
@@ -76,10 +48,6 @@ CREATE TABLE IF NOT EXISTS Hotel (
 
 CREATE TABLE IF NOT EXISTS HotelPhone(
 	HotelID Integer,
-	CompanyName Varchar(225),
-	phoneNumber VarChar(20),
-	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName) ON DELETE CASCADE,
-	PRIMARY KEY (phoneNumber, HotelID, CompanyName)
 	CompanyName Varchar(225),
 	phoneNumber VarChar(20),
 	FOREIGN KEY (HotelID, CompanyName) REFERENCES Hotel(HotelID, CompanyName) ON DELETE CASCADE,
