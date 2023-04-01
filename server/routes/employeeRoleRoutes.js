@@ -119,7 +119,7 @@ router.post("/manages", async(req, res)=> {
 
         const newManage = await pool.query(
             "INSERT INTO Manages (EmployeeID, HotelID, CompanyName) VALUES ($1, $2, $3) RETURNING *", [manages.employeeid, 
-                manages.hotelid, manages.companyName]
+                manages.hotelid, manages.companyname]
         );
 
         res.json(newManage.rows);
@@ -151,6 +151,18 @@ router.get("/manages/specific", async(req, res)=>{
         const allEmployee = await pool.query("Select * from manages WHERE EmployeeID = $1 AND companyname = $2 AND hotelid = $3", [employeeid, companyname, hotelid]);
         res.json(allEmployee.rows);
 
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+router.put("/hotel/manages", async(req, res)=>{
+    try {
+        const companyname = req.body.companyname;
+        const hotelid = req.body.hotelid;
+        console.debug("Retriving Manages From Hotel Id and Company Name: "+companyname+" from database.");
+        const allEmployee = await pool.query("Select * from manages WHERE companyname = $1 AND hotelid = $2", [companyname, hotelid]);
+        res.json(allEmployee.rows);
     } catch (err) {
         console.error(err.message);
     }

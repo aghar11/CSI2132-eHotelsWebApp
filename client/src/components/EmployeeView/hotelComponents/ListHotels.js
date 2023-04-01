@@ -20,7 +20,7 @@ const ListHotels = () => {
         addHotel();    
         getHotels();   
     };
-
+    
     const [hotels, setHotels] = useState([]);
     const [hotelid , sethotelID] = useState("HotelID")
     const [category , setcategory] = useState("Category")
@@ -41,7 +41,13 @@ const ListHotels = () => {
     const [editpostalcode, setEditpostalcode] = useState("");
     const [editnumberOfRooms, setEditnumberOfRooms] = useState("");
 
-
+    const [selectedHotel, setselectedHotel] = useState([]);
+    const [selectedPhone, setselectedPhone] = useState([]);
+    const [selectedEmail, setselectedEmail] = useState([]);
+    const [selectedManager, setselectedManager] = useState([]);
+    const [hotelPhoneNumbers, sethotelPhoneNumbers] = useState([]);
+    const [hotelEmails, sethotelEmails] = useState([]);
+    const [hotelManagers, sethotelManagers] = useState([]);
 
     const addHotel = async (e) => {
         try {
@@ -91,6 +97,7 @@ const ListHotels = () => {
 
     const editHotel = async (hotel) => {
         try {
+            setselectedHotel(hotel);
             setEditStreetNumber(hotel.streetnumber);
             setEditCategory(hotel.category);
             setEditnumberOfRooms(hotel.numberofrooms);
@@ -99,6 +106,9 @@ const ListHotels = () => {
             setEditstate(hotel.state);
             setEditpostalcode(hotel.postalcode);
             setEditStreetname(hotel.streetname);
+            getHotelPhones(hotel.hotelid, hotel.companyname);
+            getHotelEmails(hotel.hotelid, hotel.companyname);
+            getHotelManages(hotel.hotelid, hotel.companyname);
         } catch (error) {
             console.error(error.message);
         };
@@ -126,6 +136,167 @@ const ListHotels = () => {
             console.error(error.message);
         };
     };
+
+    const getHotelPhones = async (hotelid, companyname) => {
+        try {
+            sethotelPhoneNumbers([]);
+            const body = {hotelid: hotelid, companyname: companyname};
+            console.log(JSON.stringify(body));
+            const response = await fetch("http://localhost:5000/api/hotel/phone", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            sethotelPhoneNumbers(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        };
+    };
+
+    const getHotelEmails = async (hotelid, companyname) => {
+        try {
+            sethotelEmails([]);
+            const body = {hotelid: hotelid, companyname: companyname};
+            console.log(JSON.stringify(body));
+            const response = await fetch("http://localhost:5000/api/hotel/email", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            sethotelEmails(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        };
+    };
+
+    const getHotelManages = async (hotelid, companyname) => {
+        try {
+            sethotelManagers([]);
+            const body = {hotelid: hotelid, companyname: companyname};
+            console.log(JSON.stringify(body));
+            const response = await fetch("http://localhost:5000/api/hotel/manages", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            sethotelManagers(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        };
+    };
+
+    const deletePhoneNumber = async (phone) => {
+        try {
+            const body = {hotelid: phone.hotelid, companyname: phone.companyname, phonenumber: phone.phonenumber};
+            const response = await fetch("http://localhost:5000/api/hotel/phone", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            getHotelPhones(selectedHotel.hotelid, selectedHotel.companyname);
+            window.location("/")
+        } catch (error) {
+            console.error(error.message);
+        };
+    };
+
+    const deleteEmail = async (email) => {
+        try {
+            const body = {hotelid: email.hotelid, companyname: email.companyname, email: email.email};
+            const response = await fetch("http://localhost:5000/api/hotel/email", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            getHotelEmails(selectedHotel.hotelid, selectedHotel.companyname);
+            window.location("/")
+        } catch (error) {
+            console.error(error.message);
+        };
+    };
+
+    const deleteManager = async (manager) => {
+        try {
+            const body = {hotelid: manager.hotelid, companyname: manager.companyname, employeeid: manager.employeeid};
+            const response = await fetch("http://localhost:5000/api/manages", {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            getHotelManages(selectedHotel.hotelid, selectedHotel.companyname);
+            window.location("/")
+        } catch (error) {
+            console.error(error.message);
+        };
+    };
+
+    const addPhoneNumber = async e => {
+        e.preventDefault();
+        try {
+            const body = { hotelid: newhotelid, phonenumber: newPhoneNumber, companyname: newhotelchain}
+            
+            const response = await fetch("http://localhost:5000/api/hotel/phone", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            getHotelPhones(selectedHotel.hotelid, selectedHotel.companyname);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const addEmail = async e => {
+        e.preventDefault();
+        try {
+            const body = {email: newEmail, companyname: newhotelchain, hotelid: newhotelid}
+            
+            const response = await fetch("http://localhost:5000/api/hotel/email", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            getHotelEmails(selectedHotel.hotelid, selectedHotel.companyname);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const addManager = async e => {
+        e.preventDefault();
+        try {
+            const body = {employeeid: newEmployeeid, hotelid: newhotelid, companyname: newhotelchain}
+            
+            const response = await fetch("http://localhost:5000/api/manages", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            const jsonData = await response.json();
+            getHotelManages(selectedHotel.hotelid, selectedHotel.companyname);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const [newhotelid, setNewHotelID] = useState([]);
+    const [newhotelchain, setNewHotelChain] = useState([]);
+    const [newPhoneNumber, setnewPhoneNumber] = useState([]);
+    const [newEmail, setnewEmail] = useState([]);
+    const [newEmployeeid, setnewEmployeeid] = useState([]);
+    
+    const setUpPhoneEmailManagerForm = async () => {
+        setNewHotelChain(selectedHotel.companyname);
+        setNewHotelID(selectedHotel.hotelid);
+    } 
 
     return (
         <Fragment>
@@ -298,6 +469,69 @@ const ListHotels = () => {
                     </div>
 
                 </form>
+                <div className='table'>
+                    <table className="table mt-3 text-left">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Phone Numbers</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {hotelPhoneNumbers.map(phone => (
+                            <tr key = {phone.hotelid}>
+                                <td>{phone.phonenumber}</td>
+                                <td>
+                                    <button id="amenityDeleteButton" type="button" class="btn btn-danger" onClick={() => deletePhoneNumber(phone)}>Delete</button>
+                                </td>
+                            </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <button id="amenityAddButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#addPhoneNumberModal" onClick={setUpPhoneEmailManagerForm}>Add Phone Number</button>
+                </div>
+                <div className='table'>
+                    <table className="table mt-3 text-left">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hotel Emails</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {hotelEmails.map(email => (
+                            <tr key = {email.hotelid}>
+                                <td>{email.email}</td>
+                                <td>
+                                    <button id="issueDeleteButton" type="button" class="btn btn-danger" onClick={() => deleteEmail(email)}>Delete</button>
+                                </td>
+                            </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <button id="issueAddButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#addEmailModal" onClick={setUpPhoneEmailManagerForm}>Add Email</button>
+                </div>
+                <div className='table'>
+                    <table className="table mt-3 text-left">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Hotel Managers</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {hotelManagers.map(manager => (
+                            <tr key = {manager.hotelid}>
+                                <td>{manager.employeeid}</td>
+                                <td>
+                                    <button id="issueDeleteButton" type="button" class="btn btn-danger" onClick={() => deleteManager(manager)}>Delete</button>
+                                </td>
+                            </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <button id="issueAddButton" type="button" class="btn btn-success" data-toggle="modal" data-target="#addManagerModal" onClick={setUpPhoneEmailManagerForm}>Add Manager</button>
+                </div>
                 </div>
                     <div className="modal-footer">
                         <button
@@ -315,6 +549,77 @@ const ListHotels = () => {
                         >
                             Save changes
                         </button>
+                    </div>
+                </div>
+                <div class="modal" id="addPhoneNumberModal" tabindex='-1' role='dialog' aria-labelledby='addPhoneNumberModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Phone Numbers</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <form className = "form-group" onSubmit={addPhoneNumber}>
+                                <h6 className='mt-2'>Hotel ID</h6>
+                                <input type= "text" className="form-control" value = {newhotelid} ></input>
+                                <h6 className='mt-2'>Hotel Chain</h6>
+                                <input type= "text" className="form-control" value = {newhotelchain} ></input>
+                                <h6 className='mt-2'>Phone Number</h6>
+                                <input type= "text" className="form-control" value = {newPhoneNumber} onChange={e => setnewPhoneNumber(e.target.value)}></input>
+                                <button className= "btn btn-success mt-4">Add Phone Number</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="addEmailModal" tabindex='-1' role='dialog' aria-labelledby='addEmailModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Email</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <form className = "form-group" onSubmit={addEmail}>
+                                <h6 className='mt-2'>Hotel ID</h6>
+                                <input type= "text" className="form-control" value = {newhotelid} ></input>
+                                <h6 className='mt-2'>Hotel Chain</h6>
+                                <input type= "text" className="form-control" value = {newhotelchain} ></input>
+                                <h6 className='mt-2'>Email</h6>
+                                <input type= "text" className="form-control" value = {newEmail} onChange={e => setnewEmail(e.target.value)}></input>
+                                <button className= "btn btn-success mt-4">Add Email</button>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" id="addManagerModal" tabindex='-1' role='dialog' aria-labelledby='addManagerModalLabel' aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Manager</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            <form className = "form-group" onSubmit={addManager}>
+                                <h6 className='mt-2'>Hotel ID</h6>
+                                <input type= "text" className="form-control" value = {newhotelid} ></input>
+                                <h6 className='mt-2'>Hotel Chain</h6>
+                                <input type= "text" className="form-control" value = {newhotelchain} ></input>
+                                <h6 className='mt-2'>Employee ID</h6>
+                                <input type= "text" className="form-control" value = {newEmployeeid} onChange={e => setnewEmployeeid(e.target.value)}></input>
+                                <button className= "btn btn-success mt-4">Add Manager</button>
+                            </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
